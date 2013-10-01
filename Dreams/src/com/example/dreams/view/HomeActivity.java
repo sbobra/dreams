@@ -1,15 +1,21 @@
-package com.example.dreams;
+package com.example.dreams.view;
+
+import com.example.dreams.R;
+import com.example.dreams.R.layout;
+import com.example.dreams.R.menu;
+import com.stackmob.android.sdk.common.StackMobAndroid;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.Menu;
 
-public class Home extends Activity {
+public class HomeActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
     }
 
 
