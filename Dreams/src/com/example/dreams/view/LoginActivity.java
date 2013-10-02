@@ -1,12 +1,14 @@
 package com.example.dreams.view;
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 
 import com.example.dreams.R;
 import com.example.dreams.R.id;

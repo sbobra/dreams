@@ -13,6 +13,10 @@ public class User extends StackMobUser {
         this.name = name;
     }
     
+    public User(String username, String password) {
+        super(User.class, username, password);
+    }
+    
     public void setName(String n) {
     	this.name = n;
     }
