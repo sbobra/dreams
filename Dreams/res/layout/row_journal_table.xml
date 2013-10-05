@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableRow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp"
+    android:layout_marginTop="20dp"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    android:paddingBottom="5dp"
+    android:paddingTop="5dp" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/journal_row_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="date: "
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/journal_row_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="duration: "
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/journal_row_dream_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="dream name: "
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/journal_row_emotions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="emotions: "
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/journal_row_tags"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="time left: "
+                android:textSize="15sp"
+                android:textStyle="bold" />
+            
+            <TextView
+                android:id="@+id/journal_row_colors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="colors: "
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+</TableRow>

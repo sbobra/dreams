@@ -11,6 +11,7 @@ import com.example.dreams.model.State;
 import com.example.dreams.model.User;
 import com.example.dreams.view.HomeActivity;
 import com.example.dreams.view.LoginActivity;
+import com.stackmob.sdk.api.StackMob;
 import com.stackmob.sdk.api.StackMobOptions;
 import com.stackmob.sdk.api.StackMobQuery;
 import com.stackmob.sdk.callback.StackMobCallback;
@@ -24,6 +25,28 @@ public class LoginController {
 	public LoginController(LoginActivity activity) {
 		this.view = activity;
 
+	}
+	
+	public void checkLogin() {
+		if(StackMob.getStackMob().isLoggedIn()) {
+		    User.getLoggedInUser(User.class, new StackMobQueryCallback<User>() {
+				@Override
+				public void failure(StackMobException arg0) {
+					// continue with login process
+					Log.i("LoginController", "No logged in user found!");
+
+				}
+
+				@Override
+				public void success(List<User> arg0) {
+					// TODO Auto-generated method stub
+					Log.i("LoginController", "User already logged in!");
+		            User loggedInUser = arg0.get(0);
+		            State.getInstance().setUsername(loggedInUser.getUsername());
+		            getUserData(State.getInstance().getUsername());
+				}
+		    });
+		}
 	}
 
 	public void onNewUserPressed(final String name, final String username,
@@ -87,9 +110,9 @@ public class LoginController {
 
 					@Override
 					public void success(List<User> arg0) {
-						// TODO Auto-generated method stub
+						State.getInstance().setName(arg0.get(0).getName());
 						Log.i("LoginController", "Welcome, "
-								+ arg0.get(0).getName());
+								+ State.getInstance().getName());
 						view.startActivity(new Intent(view, HomeActivity.class));
 						view.finish();
 					}

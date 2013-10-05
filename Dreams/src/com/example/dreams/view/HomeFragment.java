@@ -1,10 +1,12 @@
 package com.example.dreams.view;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.dreams.R;
 import com.example.dreams.controller.HomeFragmentController;
@@ -16,6 +18,8 @@ public class HomeFragment extends Fragment {
 	public static final String ARG_PAGE = "page";
 	public HomeFragmentController controller = null;
 	public ViewGroup rootView;
+	public Button sleepButton;
+	public boolean asleep;
 
 	/**
 	 * The fragment's page number, which is set to the argument value for
@@ -39,8 +43,9 @@ public class HomeFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mPageNumber = getArguments().getInt(ARG_PAGE);
-//		if (controller == null)
-//			controller = new ListFragmentController(this);
+		if (controller == null)
+			controller = new HomeFragmentController(this);
+		
 	}
 
 	@Override
@@ -51,9 +56,24 @@ public class HomeFragment extends Fragment {
 				R.layout.fragment_home, container, false);
 
 		this.rootView = rootView;
+		
+		asleep = false;
+		sleepButton = (Button) rootView.findViewById(R.id.sleepButton);
+		sleepButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				if (!asleep) {
+					sleepButton.setText("Wake up");
+				} else {
+					sleepButton.setText("Go to sleep");
+					startActivity(new Intent(v.getContext(), NewDreamActivity.class));
+				}
+				asleep = !asleep;
+			}
+		});
+		
 		return rootView;
 	}
-
+	
 	/**
 	 * Returns the page number represented by this fragment object.
 	 */

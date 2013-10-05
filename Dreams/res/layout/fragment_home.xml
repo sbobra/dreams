@@ -21,13 +21,27 @@
 
     <!-- Dummy content. -->
 
-    <TextView
-        android:id="@android:id/text1"
-        style="?android:textAppearanceLarge"
+    <LinearLayout
+        android:id="@+id/homeContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="Home"
-        android:textStyle="bold" />
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@android:id/text1"
+            style="?android:textAppearanceLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Home"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/sleepButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Go to sleep" />
+        
+    </LinearLayout>
 
 </ScrollView>

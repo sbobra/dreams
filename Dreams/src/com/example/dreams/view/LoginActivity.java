@@ -1,18 +1,14 @@
 package com.example.dreams.view;
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 
 import com.example.dreams.R;
-import com.example.dreams.R.id;
-import com.example.dreams.R.layout;
 import com.example.dreams.controller.LoginController;
 import com.stackmob.android.sdk.common.StackMobAndroid;
 
@@ -35,7 +31,8 @@ public class LoginActivity extends Activity {
         StackMobAndroid.init(getApplicationContext(), 0, "2448d9d1-3e41-457a-bf29-6b239f5956a5");
 
 		controller = new LoginController(this);
-		
+		controller.checkLogin();
+
 		usernameTextBox = (EditText) findViewById(R.id.usernameTextBox);
 		passwordTextBox = (EditText) findViewById(R.id.passwordTextBox);
 		nameTextBox = (EditText) findViewById(R.id.nameTextBox);

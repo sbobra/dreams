@@ -4,6 +4,7 @@ public class State {
 	private static State instance;
 	private String name = "";
 	private String username = "";
+	private String password = "";
 	private boolean isLoggedIn = false;
 	public static State getInstance() {
 		if (instance == null) {
@@ -26,5 +27,21 @@ public class State {
     
     public String getName() {
     	return this.name;
+    }
+    
+    public void setUsername(String n) {
+    	this.username = n;
+    }
+    
+    public String getUsername() {
+    	return this.username;
+    }
+    
+    public void setPassword(String n) {
+    	this.password = n;
+    }
+    
+    public String getPassword() {
+    	return this.password;
     }
 }
