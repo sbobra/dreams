@@ -1,8 +1,13 @@
 package com.example.dreams.view;
 
 import android.app.Fragment;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.support.v4.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +57,7 @@ public class HomeFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout containing a title and body text.
-		ViewGroup rootView = (ViewGroup) inflater.inflate(
+		final ViewGroup rootView = (ViewGroup) inflater.inflate(
 				R.layout.fragment_home, container, false);
 
 		this.rootView = rootView;
@@ -65,13 +70,50 @@ public class HomeFragment extends Fragment {
 					sleepButton.setText("Wake up");
 				} else {
 					sleepButton.setText("Go to sleep");
-					startActivity(new Intent(v.getContext(), NewDreamActivity.class));
+					createNotification(rootView.getContext());
+					//startActivity(new Intent(v.getContext(), NewDreamActivity.class));
 				}
 				asleep = !asleep;
 			}
 		});
 		
 		return rootView;
+	}
+	
+	public void createNotification(Context c) {
+		NotificationCompat.Builder mBuilder =
+		        new NotificationCompat.Builder(c)
+		        .setSmallIcon(R.drawable.ic_launcher)
+		        .setContentTitle("Wake up!")
+		        .setContentText("Touch to record your dream.")
+		        .setAutoCancel(true);
+		// Creates an explicit intent for an Activity in your app
+		
+		//Add LAUNCHED_BY_NOTIFICATION boolean
+		Intent resultIntent = new Intent(c, NewDreamActivity.class);
+		resultIntent.putExtra("LAUNCHED_BY_NOTIFICATION", true);
+
+		// The stack builder object will contain an artificial back stack for the
+		// started Activity.
+		// This ensures that navigating backward from the Activity leads out of
+		// your application to the Home screen.
+		TaskStackBuilder stackBuilder = TaskStackBuilder.from(c);
+		//TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+		// Adds the back stack for the Intent (but not the Intent itself)
+		stackBuilder.addParentStack(NewDreamActivity.class);
+		// Adds the Intent that starts the Activity to the top of the stack
+		stackBuilder.addNextIntent(resultIntent);
+		PendingIntent resultPendingIntent =
+		        stackBuilder.getPendingIntent(
+		            0,
+		            PendingIntent.FLAG_UPDATE_CURRENT
+		        );
+		mBuilder.setContentIntent(resultPendingIntent);
+		NotificationManager mNotificationManager =
+		    (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
+		// mId allows you to update the notification later on.
+		mNotificationManager.notify(1, mBuilder.getNotification());
+		//mNotificationManager.notify(1, mBuilder.build());
 	}
 	
 	/**

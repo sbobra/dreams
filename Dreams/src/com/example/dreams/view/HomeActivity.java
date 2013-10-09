@@ -2,7 +2,7 @@ package com.example.dreams.view;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
+import android.support.v4.app.FragmentManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
@@ -109,8 +109,8 @@ public class HomeActivity extends Activity implements PopupMenu.OnMenuItemClickL
 	 * objects, in sequence.
 	 */
 	public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
-		public ScreenSlidePagerAdapter(FragmentManager fm) {
-			super(fm);
+		public ScreenSlidePagerAdapter(android.app.FragmentManager fragmentManager) {
+			super(fragmentManager);
 		}
 
 		@Override
