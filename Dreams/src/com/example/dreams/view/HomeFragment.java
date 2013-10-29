@@ -68,9 +68,10 @@ public class HomeFragment extends Fragment {
 			public void onClick(View v) {
 				if (!asleep) {
 					sleepButton.setText("Wake up");
+					controller.saveTime();
+					createNotification(rootView.getContext());
 				} else {
 					sleepButton.setText("Go to sleep");
-					createNotification(rootView.getContext());
 					//startActivity(new Intent(v.getContext(), NewDreamActivity.class));
 				}
 				asleep = !asleep;

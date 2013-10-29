@@ -8,18 +8,20 @@ public class Dream extends StackMobModel {
 
 	private String note;
 	private String name;
-	private List<Integer> emotions;
-	private List<Integer> colors;
+	private List<Double> emotions;
+	private List<Double> colors;
 	private List<String> tags;
+	private List<Double> recordings;
 
-	public Dream(String note, String name, List<Integer> emotions,
-			List<Integer> colors, List<String> tags) {
+	public Dream(String note, String name, List<Double> emotions,
+			List<Double> colors, List<String> tags, List<Double> recordings) {
 		super(Dream.class);
 		this.note = note;
 		this.name = name;
 		this.emotions = emotions;
 		this.colors = colors;
 		this.tags = tags;
+		this.recordings = recordings;
 	}
 
 	public void setNote(String note) {
@@ -38,12 +40,16 @@ public class Dream extends StackMobModel {
 		return this.name;
 	}
 
-	public List<Integer> getEmotions() {
+	public List<Double> getEmotions() {
 		return this.emotions;
 	}
 	
-	public List<Integer> getColors() {
-		return this.emotions;
+	public List<Double> getRecordings() {
+		return this.recordings;
+	}
+	
+	public List<Double> getColors() {
+		return this.colors;
 	}
 	
 	public List<String> getTags() {

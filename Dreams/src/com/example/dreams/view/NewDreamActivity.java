@@ -1,17 +1,16 @@
 package com.example.dreams.view;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.media.AudioFormat;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -41,6 +40,7 @@ import com.stackmob.sdk.exception.StackMobException;
 public class NewDreamActivity extends Activity {
 
 	private NewDreamController controller;
+	List<Double> recordings = new ArrayList<Double>();
 	private boolean[] checkArray;
 	private boolean[] colorArray;
 	private Button createButton;
@@ -70,20 +70,21 @@ public class NewDreamActivity extends Activity {
 		createButton = (Button) findViewById(R.id.createButton);
 		createButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				saveRecording();
 				String name = ((EditText) findViewById(R.id.dreamNameText))
 						.getText().toString();
 				String note = ((EditText) findViewById(R.id.dreamNotesText))
 						.getText().toString();
-				List<Integer> emotions = new ArrayList<Integer>();
+				List<Double> emotions = new ArrayList<Double>();
 				for (int i = 0; i < 3; i++) {
 					if (checkArray[i]) {
-						emotions.add(i);
+						emotions.add((double)i);
 					}
 				}
-				List<Integer> colors = new ArrayList<Integer>();
+				List<Double> colors = new ArrayList<Double>();
 				for (int i = 0; i < 3; i++) {
 					if (colorArray[i]) {
-						colors.add(i);
+						colors.add((double) i);
 					}
 				}
 				String tagsString = ((EditText) findViewById(R.id.dreamTagsText))
@@ -94,15 +95,19 @@ public class NewDreamActivity extends Activity {
 					tags.add(tagsArray[i]);
 				}
 				final Dream newDream = new Dream(name, note, emotions, colors,
-						tags);
-				final Sleep sleep = new Sleep((int) System.currentTimeMillis(),
-						(int) (System.currentTimeMillis() + 5), 5, newDream);
+						tags, recordings);
+				
+				String bedtime = controller.getLastBedTime();
+				final Sleep sleep = new Sleep(bedtime,
+						""+(System.currentTimeMillis()), newDream);
 
 				Log.i("NewDreamActivity", name);
 				Log.i("NewDreamActivity", note);
 				Log.i("NewDreamActivity", "num emotions: " + emotions.size());
 				Log.i("NewDreamActivity", "num tags: " + tags.size());
 				Log.i("NewDreamActivity", "num colors: " + colors.size());
+				Log.i("NewDreamActivity",
+						"num recordings: " + recordings.size());
 
 				if (StackMob.getStackMob().isLoggedIn()) {
 					User.getLoggedInUser(User.class,
@@ -142,19 +147,70 @@ public class NewDreamActivity extends Activity {
 							});
 				}
 
-				finish();
+				onBackPressed();
 			}
 		});
+	}
+
+	public void clearTempDir() {
+		String path = Environment.getExternalStorageDirectory().toString()
+				+ "/dreamCatcher/temp";
+		File directory = new File(path);
+		if (directory.isDirectory()) {
+			for (File child : directory.listFiles()) {
+				child.delete();
+			}
+		}
+	}
+
+	public int getFileNumber() {
+		String path = Environment.getExternalStorageDirectory().toString()
+				+ "/dreamCatcher";
+		File directory = new File(path);
+		directory.mkdirs();
+		File[] files = directory.listFiles();
+		Arrays.sort(files);
+		if (files == null) {
+			// nothing in dreamcatcher or dreamcatcher doesn't exist
+			Log.i("NewDreamActivity", "directory is null");
+			return 0;
+		}
+		if (files.length == 0) {
+			Log.i("NewDreamActivity", "nothing in directory");
+			return 0;
+		}
+		if (files.length == 1) {
+			Log.i("NewDreamActivity", "only temp folder");
+			return 0;
+		}
+		String lastFileName = files[files.length - 2].getName();
+		// if (lastFileName.equals("temp")) {
+		// // only temp folder
+		// Log.i("NewDreamActivity", "only temp folder");
+		// return 0;
+		// }
+		try {
+			String parsed1 = (lastFileName.split("-"))[1];
+			Log.i("NewDreamActivity", parsed1);
+			String parsed2 = parsed1.substring(0, parsed1.length() - 4);
+			Log.i("NewDreamActivity", parsed2);
+			int num = Integer.valueOf(parsed2);
+			return num + 1;
+		} catch (ArrayIndexOutOfBoundsException e) {
+			Log.i("NewDreamActivity", "Parsing error");
+			return -1;
+		}
 	}
 
 	public void startRecording(View view) throws IOException {
 
 		startButton.setEnabled(false);
 		stopButton.setEnabled(true);
+		clearTempDir();
 		if (mediaAvailable()) {
 			// File sampleDir = Environment.getExternalStorageDirectory();
 			String root = Environment.getExternalStorageDirectory().toString();
-			File sampleDir = new File(root + "/saved_audio");
+			File sampleDir = new File(root + "/dreamCatcher/temp");
 			sampleDir.mkdirs();
 			try {
 				audiofile = File.createTempFile("sound", ".3gp", sampleDir);
@@ -162,6 +218,7 @@ public class NewDreamActivity extends Activity {
 				Log.e(TAG, "sdcard access error");
 				return;
 			}
+
 			recorder = new MediaRecorder();
 			recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 			recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -180,23 +237,60 @@ public class NewDreamActivity extends Activity {
 		stopButton.setEnabled(false);
 		recorder.stop();
 		recorder.release();
-		addRecordingToMediaLibrary();
 	}
 
 	public void playRecording(View view) {
 		String path = Environment.getExternalStorageDirectory().toString()
-				+ "/saved_audio";
-		String fileName = "sound";
+				+ "/dreamCatcher";
+		String fileName = audiofile.getAbsolutePath();
+		Log.i("NewDreamActivity", "Playing file: " + fileName);
 		// set up MediaPlayer
 		MediaPlayer mp = new MediaPlayer();
 
 		try {
-			mp.setDataSource(path + "/" + fileName);
+			// mp.setDataSource(path + "/" + fileName);
+			mp.setDataSource(fileName);
 			mp.prepare();
 			mp.start();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+	}
+	
+	public void saveRecording() {
+		if (audiofile != null) {
+			Log.i("NewDreamActivity", "Old name: " + audiofile.getName());
+			int fileNum = getFileNumber();
+			recordings.add((double) fileNum);
+			String fileName = Constants.getFileName(fileNum);
+			String newName = "file-" + fileName + ".3gp";
+			Log.i("NewDreamActivity", "New name: " + newName);
+			String path = Environment.getExternalStorageDirectory().toString()
+					+ "/dreamCatcher/" + newName;
+			File sampleDir = new File(path);
+			audiofile.renameTo(sampleDir);
+			addRecordingToMediaLibrary(newName, path);
+		}
+	}
+
+	protected void addRecordingToMediaLibrary(String newName, String newPath) {
+
+		ContentValues values = new ContentValues(4);
+		long current = System.currentTimeMillis();
+		values.put(MediaStore.Audio.Media.TITLE, "audio" + newName);
+		values.put(MediaStore.Audio.Media.DATE_ADDED, (int) (current / 1000));
+		values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/3gpp");
+		values.put(MediaStore.Audio.Media.DATA, newPath);
+		Log.i("NewDreamActivity", audiofile.getAbsolutePath());
+		ContentResolver contentResolver = getContentResolver();
+
+		Uri base = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+		Uri newUri = contentResolver.insert(base, values);
+
+		sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, newUri));
+		Toast.makeText(this, "Added File " + newUri, Toast.LENGTH_LONG).show();
+		Log.i("NewDreamActivity", newPath);
 
 	}
 
@@ -220,47 +314,6 @@ public class NewDreamActivity extends Activity {
 		}
 
 		return (mExternalStorageAvailable && mExternalStorageWriteable);
-	}
-
-	protected void addRecordingToMediaLibrary() {
-
-		ContentValues values = new ContentValues(4);
-		long current = System.currentTimeMillis();
-		values.put(MediaStore.Audio.Media.TITLE, "audio" + audiofile.getName());
-		values.put(MediaStore.Audio.Media.DATE_ADDED, (int) (current / 1000));
-		values.put(MediaStore.Audio.Media.MIME_TYPE, "audio/3gpp");
-		values.put(MediaStore.Audio.Media.DATA, audiofile.getAbsolutePath());
-		ContentResolver contentResolver = getContentResolver();
-
-		Uri base = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-		Uri newUri = contentResolver.insert(base, values);
-
-		sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, newUri));
-		Toast.makeText(this, "Added File " + newUri, Toast.LENGTH_LONG).show();
-
-	}
-
-	private void SaveImage(Bitmap finalBitmap) {
-
-		String root = Environment.getExternalStorageDirectory().toString();
-		File myDir = new File(root + "/saved_images");
-		myDir.mkdirs();
-		Random generator = new Random();
-		int n = 10000;
-		n = generator.nextInt(n);
-		String fname = "Image-" + n + ".jpg";
-		File file = new File(myDir, fname);
-		if (file.exists())
-			file.delete();
-		try {
-			FileOutputStream out = new FileOutputStream(file);
-			finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
-			out.flush();
-			out.close();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void onCheckboxClicked(View view) {

@@ -30,6 +30,14 @@ public class DreamActivity extends Activity {
 				finish();
 			}
 		});
+		
+		Button deleteButton = ((Button) findViewById(R.id.deleteButton));
+		deleteButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+//				controller.deleteDream();
+				finish();
+			}
+		});
 	}
 	
 

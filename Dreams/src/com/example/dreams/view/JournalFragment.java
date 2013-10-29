@@ -1,5 +1,7 @@
 package com.example.dreams.view;
 
+import java.util.Date;
+
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.dreams.R;
 import com.example.dreams.controller.JournalFragmentController;
+import com.example.dreams.controller.Utils;
 import com.example.dreams.model.Sleep;
 
 public class JournalFragment extends Fragment {
@@ -88,18 +91,20 @@ public class JournalFragment extends Fragment {
 			// Inflate your row "template" and fill out the fields.
 			final TableRow row = (TableRow) LayoutInflater.from(
 					rootView.getContext()).inflate(R.layout.row_journal_table, null);
-			((TextView) row.findViewById(R.id.journal_row_date)).setText("Date: "+sleep.getStartTime());
-			((TextView) row.findViewById(R.id.journal_row_duration)).setText("Duration: "+sleep.getDuration());
+			Date startTime = new Date(Long.valueOf(sleep.getStartTime()));
+			((TextView) row.findViewById(R.id.journal_row_date)).setText(startTime.toString());
+			float duration = Utils.millisToMins(Long.valueOf(sleep.getEndTime()) - Long.valueOf(sleep.getStartTime()));
+			((TextView) row.findViewById(R.id.journal_row_duration)).setText("Duration: " + duration + " mins");
 			((TextView) row.findViewById(R.id.journal_row_dream_name)).setText("Name: "+sleep.getDream().getName());
 			String colors = "";
 			for (int i = 0; i<sleep.getDream().getColors().size();i++) {
-				colors+=sleep.getDream().getColors().get(i) + " ";
+				colors+=Constants.colors[sleep.getDream().getColors().get(i).intValue()] + ", ";
 			}
 			((TextView) row.findViewById(R.id.journal_row_colors)).setText("Colors: "
 					+ colors);
 			String emotions = "";
 			for (int i = 0; i<sleep.getDream().getEmotions().size();i++) {
-				emotions+=sleep.getDream().getEmotions().get(i) + " ";
+				emotions+=Constants.emotions[sleep.getDream().getEmotions().get(i).intValue()] + ", ";
 			}
 			((TextView) row.findViewById(R.id.journal_row_emotions)).setText("Emotions: "
 					+ emotions);
@@ -122,9 +127,9 @@ public class JournalFragment extends Fragment {
 			});
 
 			table.addView(row);
-//			TableRow spacer = (TableRow) LayoutInflater.from(
-//					rootView.getContext()).inflate(R.layout.spacer_row, null);
-//			table.addView(spacer);
+			TableRow spacer = (TableRow) LayoutInflater.from(
+					rootView.getContext()).inflate(R.layout.spacer_row, null);
+			table.addView(spacer);
 
 			table.requestLayout();
 		}

@@ -1,5 +1,6 @@
 package com.example.dreams.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
 import android.util.Log;
@@ -14,10 +15,23 @@ import com.stackmob.sdk.exception.StackMobException;
 
 public class JournalFragmentController {
 	private JournalFragment fragment;
+	Sleep[] sleepList;
 
 	public JournalFragmentController(JournalFragment journalFragment) {
 		this.fragment = journalFragment;
 
+	}
+
+	public void updateTable() {
+		for (int i = 0; i < sleepList.length; i++) {
+			final Sleep s = sleepList[i];
+			fragment.getActivity().runOnUiThread(new Runnable() {
+				public void run() {
+					fragment.populate(s);
+				}
+			});
+
+		}
 	}
 
 	public void onRefresh() {
@@ -39,15 +53,12 @@ public class JournalFragmentController {
 					public void success(List<Sleep> arg0) {
 						Log.i("JournalFragmentController", arg0.size()
 								+ " dreams received!");
-						for (int i = 0; i < arg0.size(); i++) {
-							final Sleep s = arg0.get(i);
-							fragment.getActivity().runOnUiThread(new Runnable() {
-							    public void run() {
-							    	fragment.populate(s);
-							    }
-							});
-
+						sleepList = new Sleep[arg0.size()];
+						for (int i = 0; i<sleepList.length;i++) {
+							sleepList[i] = arg0.get(i);
 						}
+						Arrays.sort(sleepList);
+						updateTable();
 
 					}
 				});

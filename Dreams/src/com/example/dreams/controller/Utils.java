@@ -21,5 +21,8 @@ public class Utils {
 	       throw new RuntimeException(ex);
 	    }
 	}
-
+	
+	public static float millisToMins(long millis) {
+		return (float)(((float)millis/1000f)/60f);
+	}
 }
