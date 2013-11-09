@@ -1,6 +1,8 @@
 package com.example.dreams.view;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -13,27 +15,25 @@ import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import butterknife.InjectView;
+import butterknife.OnClick;
+import butterknife.Views;
 
 import com.example.dreams.R;
-import com.example.dreams.controller.JournalFragmentController;
-import com.example.dreams.controller.Utils;
+import com.example.dreams.Utils;
 import com.example.dreams.model.Sleep;
+import com.example.dreams.model.State;
+import com.stackmob.sdk.api.StackMobOptions;
+import com.stackmob.sdk.api.StackMobQuery;
+import com.stackmob.sdk.callback.StackMobQueryCallback;
+import com.stackmob.sdk.exception.StackMobException;
+import com.stackmob.sdk.model.StackMobModel;
 
 public class JournalFragment extends Fragment {
 	/**
 	 * The argument key for the page number this fragment represents.
 	 */
 	public static final String ARG_PAGE = "page";
-	public JournalFragmentController controller = null;
-	public ViewGroup rootView;
-	public Button refreshButton;
-
-	/**
-	 * The fragment's page number, which is set to the argument value for
-	 * {@link #ARG_PAGE}.
-	 */
-	private int mPageNumber;
-
 	/**
 	 * Factory method for this fragment class. Constructs a new fragment for the
 	 * given page number.
@@ -45,45 +45,116 @@ public class JournalFragment extends Fragment {
 		fragment.setArguments(args);
 		return fragment;
 	}
+	/**
+	 * The fragment's page number, which is set to the argument value for
+	 * {@link #ARG_PAGE}.
+	 */
+	private int mPageNumber;
 
+	@InjectView(R.id.refreshButton)
+	Button refreshButton;
+
+	public ViewGroup rootView;
+
+	Sleep[] sleepList;
+
+	public void clearTable() {
+		if (rootView != null) {
+			TableLayout table = (TableLayout) rootView
+					.findViewById(R.id.tableLayout);
+			table.removeAllViews();
+		}
+
+	}
+	
+	/**
+	 * Returns the page number represented by this fragment object.
+	 */
+	public int getPageNumber() {
+		return mPageNumber;
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mPageNumber = getArguments().getInt(ARG_PAGE);
-		if (controller == null)
-			controller = new JournalFragmentController(this);
 	}
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// Inflate the layout containing a title and body text.
-		ViewGroup rootView = (ViewGroup) inflater.inflate(
+		rootView = (ViewGroup) inflater.inflate(
 				R.layout.fragment_journal, container, false);
-
-		this.rootView = rootView;
-		
-		refreshButton = (Button) rootView.findViewById(R.id.refreshButton);
-		refreshButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				controller.onRefresh();
-			}
-		});
-
+		Views.inject(this, rootView);
 		return rootView;
 	}
-	
-	public void testRow() {
-		TableLayout table = (TableLayout) rootView
-				.findViewById(R.id.tableLayout);
-		// Inflate your row "template" and fill out the fields.
-		final TableRow row = (TableRow) LayoutInflater.from(
-				rootView.getContext()).inflate(R.layout.row_journal_table, null);
-		table.addView(row);
 
-		table.requestLayout();
+
+	@OnClick(R.id.refreshButton)
+	public void onRefresh() {
+		clearTable();
+		// request dream data
+
+		StackMobModel.query(
+				Sleep.class,
+				new StackMobQuery().fieldIsEqualTo("sm_owner",
+						("user/" + State.getInstance().getUsername()))
+						.fieldIsNotNull("dream"), StackMobOptions.https(true)
+						.withDepthOf(3), new StackMobQueryCallback<Sleep>() {
+					@Override
+					public void failure(StackMobException e) {
+						Log.i("JournalFragmentController", e.getMessage());
+					}
+
+					@Override
+					public void success(List<Sleep> arg0) {
+						Log.i("JournalFragmentController", arg0.size()
+								+ " dreams received!");
+						sleepList = new Sleep[arg0.size()];
+						for (int i = 0; i<sleepList.length;i++) {
+							sleepList[i] = arg0.get(i);
+						}
+						Arrays.sort(sleepList);
+						updateTable();
+
+					}
+				});
+		// String query = "user/" + State.getInstance().getUsername();
+		// Log.i("JournalFragmentController", query);
+		// StackMobQuery q = new StackMobQuery(query);
+		// User.query(
+		// User.class,
+		// q,
+		// StackMobOptions.https(true)
+		// .withSelectedFields(Arrays.asList("dream_list"))
+		// .withDepthOf(1), new StackMobQueryCallback<User>() {
+		// @Override
+		// public void failure(StackMobException e) {
+		// Log.i("JournalFragmentController", e.getMessage());
+		// }
+		//
+		// @Override
+		// public void success(List<User> arg0) {
+		// Log.i("JournalFragmentController", arg0.get(0)
+		// .getName() + " = name");
+		// Log.i("JournalFragmentController", arg0.get(0)
+		// .getDreamList().size()
+		// + " dreams received!");
+		// for (int i = 0; i < arg0.get(0).getDreamList().size(); i++) {
+		// Sleep s = arg0.get(0).getDreamList().get(i);
+		// fragment.populate(s);
+		// }
+		//
+		// }
+		// });
 	}
-	
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		onRefresh();
+	}
+
 	public void populate(final Sleep sleep) {
 		if (rootView != null) {
 			TableLayout table = (TableLayout) rootView
@@ -116,6 +187,7 @@ public class JournalFragment extends Fragment {
 					+ tags);
 
 			row.setOnClickListener(new View.OnClickListener() {
+				@Override
 				public void onClick(View v) {
 					Log.i("ListFragment", "Dream pressed! Dream: " + sleep.getID());
 					Intent intent = new Intent(rootView.getContext(), DreamActivity.class);
@@ -134,30 +206,28 @@ public class JournalFragment extends Fragment {
 			table.requestLayout();
 		}
 	}
-	
-	public void clearTable() {
-		if (rootView != null) {
-			TableLayout table = (TableLayout) rootView
-					.findViewById(R.id.tableLayout);
-			table.removeAllViews();
+
+	public void testRow() {
+		TableLayout table = (TableLayout) rootView
+				.findViewById(R.id.tableLayout);
+		// Inflate your row "template" and fill out the fields.
+		final TableRow row = (TableRow) LayoutInflater.from(
+				rootView.getContext()).inflate(R.layout.row_journal_table, null);
+		table.addView(row);
+
+		table.requestLayout();
+	}
+
+	public void updateTable() {
+		for (int i = 0; i < sleepList.length; i++) {
+			final Sleep s = sleepList[i];
+			getActivity().runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					populate(s);
+				}
+			});
+
 		}
-
-	}
-
-
-	/**
-	 * Returns the page number represented by this fragment object.
-	 */
-	public int getPageNumber() {
-		return mPageNumber;
-	}
-
-	@Override
-	public void onResume() {
-		
-		super.onResume();
-		if (controller == null)
-			controller = new JournalFragmentController(this);
-		controller.onRefresh();
 	}
 }

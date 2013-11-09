@@ -6,32 +6,25 @@ import android.app.PendingIntent;
 import android.support.v4.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import butterknife.InjectView;
+import butterknife.OnClick;
+import butterknife.Views;
 
 import com.example.dreams.R;
-import com.example.dreams.controller.HomeFragmentController;
 
 public class HomeFragment extends Fragment {
 	/**
 	 * The argument key for the page number this fragment represents.
 	 */
 	public static final String ARG_PAGE = "page";
-	public HomeFragmentController controller = null;
-	public ViewGroup rootView;
-	public Button sleepButton;
-	public boolean asleep;
-
-	/**
-	 * The fragment's page number, which is set to the argument value for
-	 * {@link #ARG_PAGE}.
-	 */
-	private int mPageNumber;
-
+	public static final String PREFS_NAME = "timeStamps";
 	/**
 	 * Factory method for this fragment class. Constructs a new fragment for the
 	 * given page number.
@@ -43,44 +36,19 @@ public class HomeFragment extends Fragment {
 		fragment.setArguments(args);
 		return fragment;
 	}
+	public boolean asleep;
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		mPageNumber = getArguments().getInt(ARG_PAGE);
-		if (controller == null)
-			controller = new HomeFragmentController(this);
-		
-	}
+	/**
+	 * The fragment's page number, which is set to the argument value for
+	 * {@link #ARG_PAGE}.
+	 */
+	private int mPageNumber;
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		// Inflate the layout containing a title and body text.
-		final ViewGroup rootView = (ViewGroup) inflater.inflate(
-				R.layout.fragment_home, container, false);
+	public ViewGroup rootView;
 
-		this.rootView = rootView;
-		
-		asleep = false;
-		sleepButton = (Button) rootView.findViewById(R.id.sleepButton);
-		sleepButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				if (!asleep) {
-					sleepButton.setText("Wake up");
-					controller.saveTime();
-					createNotification(rootView.getContext());
-				} else {
-					sleepButton.setText("Go to sleep");
-					//startActivity(new Intent(v.getContext(), NewDreamActivity.class));
-				}
-				asleep = !asleep;
-			}
-		});
-		
-		return rootView;
-	}
-	
+	@InjectView(R.id.sleepButton)
+	Button sleepButton;
+
 	public void createNotification(Context c) {
 		NotificationCompat.Builder mBuilder =
 		        new NotificationCompat.Builder(c)
@@ -125,12 +93,51 @@ public class HomeFragment extends Fragment {
 	}
 
 	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		mPageNumber = getArguments().getInt(ARG_PAGE);
+	}
+	
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		rootView = (ViewGroup) inflater.inflate(
+				R.layout.fragment_home, container, false);
+		Views.inject(this, this.rootView);
+		asleep = false;
+		return rootView;
+	}
+
+	public void onRefresh() {
+		// refresh
+	}
+	
+
+	@Override
 	public void onResume() {
 		super.onResume();
-		if (controller != null)
-			controller.onRefresh();
-		else
-			controller = new HomeFragmentController(this);
-		controller.onRefresh();
+		onRefresh();
+	}
+
+	public void saveTime() {
+		SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+		SharedPreferences.Editor editor = settings.edit();
+		editor.putString("bedtime", ""+System.currentTimeMillis());
+
+		// Commit the edits!
+		editor.commit();
+	}
+
+	@OnClick(R.id.sleepButton)
+	public void sleepButtonClick() {
+		if (!asleep) {
+			sleepButton.setText("Wake up");
+			saveTime();
+			createNotification(rootView.getContext());
+		} else {
+			sleepButton.setText("Go to sleep");
+			//startActivity(new Intent(v.getContext(), NewDreamActivity.class));
+		}
+		asleep = !asleep;
 	}
 }

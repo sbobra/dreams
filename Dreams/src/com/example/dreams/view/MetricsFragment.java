@@ -7,22 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.dreams.R;
-import com.example.dreams.controller.MetricsFragmentController;
 
 public class MetricsFragment extends Fragment {
 	/**
 	 * The argument key for the page number this fragment represents.
 	 */
 	public static final String ARG_PAGE = "page";
-	public MetricsFragmentController controller = null;
-	public ViewGroup rootView;
-
-	/**
-	 * The fragment's page number, which is set to the argument value for
-	 * {@link #ARG_PAGE}.
-	 */
-	private int mPageNumber;
-
 	/**
 	 * Factory method for this fragment class. Constructs a new fragment for the
 	 * given page number.
@@ -35,12 +25,25 @@ public class MetricsFragment extends Fragment {
 		return fragment;
 	}
 
+	/**
+	 * The fragment's page number, which is set to the argument value for
+	 * {@link #ARG_PAGE}.
+	 */
+	private int mPageNumber;
+
+	public ViewGroup rootView;
+
+	/**
+	 * Returns the page number represented by this fragment object.
+	 */
+	public int getPageNumber() {
+		return mPageNumber;
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mPageNumber = getArguments().getInt(ARG_PAGE);
-		if (controller == null)
-			controller = new MetricsFragmentController(this);
 	}
 
 	@Override
@@ -52,22 +55,5 @@ public class MetricsFragment extends Fragment {
 
 		this.rootView = rootView;
 		return rootView;
-	}
-
-	/**
-	 * Returns the page number represented by this fragment object.
-	 */
-	public int getPageNumber() {
-		return mPageNumber;
-	}
-
-	@Override
-	public void onResume() {
-		super.onResume();
-		if (controller != null)
-			controller.onRefresh();
-		else
-			controller = new MetricsFragmentController(this);
-		controller.onRefresh();
 	}
 }

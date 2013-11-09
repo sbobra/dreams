@@ -1,8 +1,12 @@
-package com.example.dreams.controller;
+package com.example.dreams;
 
 import java.security.MessageDigest;
 
 public class Utils {
+	
+	public static float millisToMins(long millis) {
+		return (millis/1000f)/60f;
+	}
 	
 	public static String sha256(String base) {
 	    try{
@@ -20,9 +24,5 @@ public class Utils {
 	    } catch(Exception ex){
 	       throw new RuntimeException(ex);
 	    }
-	}
-	
-	public static float millisToMins(long millis) {
-		return (float)(((float)millis/1000f)/60f);
 	}
 }
