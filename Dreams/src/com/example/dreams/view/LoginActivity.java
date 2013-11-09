@@ -1,5 +1,9 @@
 package com.example.dreams.view;
 import android.app.Activity;
+import com.parse.Parse;
+import com.parse.ParseAnalytics;
+import com.parse.ParseUser;
+
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -10,6 +14,10 @@ import android.widget.LinearLayout;
 
 import com.example.dreams.R;
 import com.example.dreams.controller.LoginController;
+import com.example.dreams.model.Day;
+import com.example.dreams.model.ParseDream;
+import com.example.dreams.model.User;
+import com.parse.ParseObject;
 import com.stackmob.android.sdk.common.StackMobAndroid;
 
 public class LoginActivity extends Activity {
@@ -28,8 +36,15 @@ public class LoginActivity extends Activity {
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_login);
-        StackMobAndroid.init(getApplicationContext(), 0, "2448d9d1-3e41-457a-bf29-6b239f5956a5");
+//        StackMobAndroid.init(getApplicationContext(), 0, "2448d9d1-3e41-457a-bf29-6b239f5956a5");
 
+	    ParseObject.registerSubclass(Day.class);
+	    ParseUser.registerSubclass(ParseDream.class);
+	    ParseUser.registerSubclass(User.class);
+        Parse.initialize(this, "iyhupL8h8uVQc189NEoSQmkoUnQYMk4vpUaAi5Pb", "JbNCCk31poMMa7m0FEaz1pjRbBio2AGS4X8azZlF"); 
+        ParseAnalytics.trackAppOpened(getIntent());
+        
+        
 		controller = new LoginController(this);
 		controller.checkLogin();
 

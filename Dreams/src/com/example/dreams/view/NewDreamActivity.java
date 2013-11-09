@@ -109,43 +109,43 @@ public class NewDreamActivity extends Activity {
 				Log.i("NewDreamActivity",
 						"num recordings: " + recordings.size());
 
-				if (StackMob.getStackMob().isLoggedIn()) {
-					User.getLoggedInUser(User.class,
-							new StackMobQueryCallback<User>() {
-								@Override
-								public void failure(StackMobException arg0) {
-									// continue with login process
-									Log.i("NewDreamActivity",
-											"No logged in user found!");
-
-								}
-
-								@Override
-								public void success(List<User> arg0) {
-									// TODO Auto-generated method stub
-									User loggedInUser = arg0.get(0);
-									loggedInUser.getSleepList().add(sleep);
-									loggedInUser.getDreamList().add(sleep);
-									Log.i("NewDreamActivity", "Found user");
-									loggedInUser.save(
-											StackMobOptions.depthOf(3),
-											new StackMobModelCallback() {
-												@Override
-												public void success() {
-													Log.i("NewDreamActivity",
-															"Dream and sleep saved!");
-												}
-
-												@Override
-												public void failure(
-														StackMobException e) {
-													Log.i("NewDreamActivity",
-															e.getMessage());
-												}
-											});
-								}
-							});
-				}
+//				if (StackMob.getStackMob().isLoggedIn()) {
+//					User.getLoggedInUser(User.class,
+//							new StackMobQueryCallback<User>() {
+//								@Override
+//								public void failure(StackMobException arg0) {
+//									// continue with login process
+//									Log.i("NewDreamActivity",
+//											"No logged in user found!");
+//
+//								}
+//
+//								@Override
+//								public void success(List<User> arg0) {
+//									// TODO Auto-generated method stub
+//									User loggedInUser = arg0.get(0);
+//									loggedInUser.getSleepList().add(sleep);
+//									loggedInUser.getDreamList().add(sleep);
+//									Log.i("NewDreamActivity", "Found user");
+//									loggedInUser.save(
+//											StackMobOptions.depthOf(3),
+//											new StackMobModelCallback() {
+//												@Override
+//												public void success() {
+//													Log.i("NewDreamActivity",
+//															"Dream and sleep saved!");
+//												}
+//
+//												@Override
+//												public void failure(
+//														StackMobException e) {
+//													Log.i("NewDreamActivity",
+//															e.getMessage());
+//												}
+//											});
+//								}
+//							});
+//				}
 
 				onBackPressed();
 			}
