@@ -35,9 +35,9 @@ public class LoginActivity extends Activity {
 	@InjectView(R.id.loginButton)
 	Button loginButton;
 	@InjectView(R.id.nameLayout)
-	private LinearLayout nameLayout;
+	LinearLayout nameLayout;
 	@InjectView(R.id.nameTextBox)
-	private EditText nameTextBox;
+	EditText nameTextBox;
 	@InjectView(R.id.newAcctButton)
 	Button newUserButton;
 	@InjectView(R.id.passwordTextBox)
@@ -110,15 +110,7 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.activity_login);
 		Views.inject(this);
         StackMobAndroid.init(getApplicationContext(), 0, "2448d9d1-3e41-457a-bf29-6b239f5956a5");
-
         checkLogin();
-
-		loginButton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				
-			}
-		});
 	}
 
 	public void onLoginPressed(final String username, String password) {
