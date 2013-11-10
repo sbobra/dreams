@@ -7,6 +7,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
         android:orientation="vertical" >
 
         <RelativeLayout
@@ -94,8 +96,8 @@
 
             <ImageView
                 android:id="@+id/recordButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
                 android:onClick="startRecording"
@@ -110,35 +112,33 @@
             android:hint="Type details if desired..."
             android:lines="3"
             android:singleLine="false" >
-
-            <requestFocus />
         </EditText>
 
         <RelativeLayout
+            android:id="@+id/audioRecording"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
-            android:id="@+id/audioRecording"
-            android:visibility="gone"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:visibility="gone" >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_marginLeft="5dp"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
                 android:text="Audio Recording 1"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
-            
+
             <ImageView
                 android:id="@+id/play"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:layout_marginRight="15dp"
                 android:onClick="playRecording"
-                android:layout_centerVertical="true"
                 android:src="@drawable/ic_little_play" />
         </RelativeLayout>
 
@@ -159,26 +159,47 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
-        <CheckBox
-            android:id="@+id/checkBox1"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="onCheckboxClicked"
-            android:text="Good" />
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal" >
 
-        <CheckBox
-            android:id="@+id/checkBox2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onCheckboxClicked"
-            android:text="Bad" />
+            <ImageView
+                android:id="@+id/mood1"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginLeft="30dp"
+                android:onClick="onMoodClicked"
+                android:src="@drawable/ic_happy_black" />
 
-        <CheckBox
-            android:id="@+id/checkBox3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onCheckboxClicked"
-            android:text="Neutral" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" >
+            </View>
+
+            <ImageView
+                android:id="@+id/mood2"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:onClick="onMoodClicked"
+                android:src="@drawable/ic_meh_black" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" >
+            </View>
+
+            <ImageView
+                android:id="@+id/mood3"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginRight="30dp"
+                android:onClick="onMoodClicked"
+                android:src="@drawable/ic_sad_black" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -197,26 +218,89 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
-        <CheckBox
-            android:id="@+id/color1"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="onCheckboxClicked"
-            android:text="Red" />
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal" >
 
-        <CheckBox
-            android:id="@+id/color2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onCheckboxClicked"
-            android:text="Green" />
+            <ImageView
+                android:id="@+id/color1"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/ic_colorwheel_triangle" />
 
-        <CheckBox
-            android:id="@+id/color3"
-            android:layout_width="wrap_content"
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" >
+            </View>
+
+            <ImageView
+                android:id="@+id/color2"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/ic_colorwheel_empty_with_text" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" >
+            </View>
+
+            <ImageView
+                android:id="@+id/color3"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/ic_colorwheel_empty" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" >
+            </View>
+
+            <ImageView
+                android:id="@+id/color4"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:src="@drawable/ic_colorwheel_empty" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="onCheckboxClicked"
-            android:text="Blue" />
+            android:layout_marginTop="5dp"
+            android:gravity="right"
+            android:orientation="horizontal" >
+
+            <CheckBox
+                android:id="@+id/color1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onCheckboxClicked"
+                android:text="Red" />
+
+            <CheckBox
+                android:id="@+id/color2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="onCheckboxClicked"
+                android:text="Green" />
+
+            <CheckBox
+                android:id="@+id/color3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:onClick="onCheckboxClicked"
+                android:text="Blue" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -237,7 +321,7 @@
 
         <EditText
             android:id="@+id/dreamTagsText"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10" />
     </LinearLayout>

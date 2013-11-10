@@ -47,7 +47,7 @@ public class NewDreamActivity extends Activity {
 	private static final String TAG = "SoundRecordingActivity";
 	File audiofile = null;
 	private boolean[] checkArray;
-
+	private int mood = -1;
 	private boolean[] colorArray;
 	private TextView createButton;
 	@InjectView(R.id.play)
@@ -179,6 +179,30 @@ public class NewDreamActivity extends Activity {
 			super.onBackPressed();
 		}
 	}
+	
+	public void onMoodClicked(View view) {
+		switch (view.getId()) {
+		case R.id.mood1:
+			mood = 0;
+			setMoodSelected(view);
+			break;
+		case R.id.mood2:
+			mood = 1;
+			setMoodSelected(view);
+			break;
+		case R.id.mood3:
+			setMoodSelected(view);
+			mood = 2;
+			break;
+		}
+	}
+	
+	public void setMoodSelected(View view) {
+		((ImageView) findViewById(R.id.mood1)).setAlpha(0.2f);
+		((ImageView) findViewById(R.id.mood2)).setAlpha(0.2f);
+		((ImageView) findViewById(R.id.mood3)).setAlpha(0.2f);
+		view.setAlpha(1.0f);
+	}
 
 	public void onCheckboxClicked(View view) {
 		// Is the view now checked?
@@ -186,15 +210,6 @@ public class NewDreamActivity extends Activity {
 
 		// Check which checkbox was clicked
 		switch (view.getId()) {
-		case R.id.checkBox1:
-			checkArray[0] = checked;
-			break;
-		case R.id.checkBox2:
-			checkArray[1] = checked;
-			break;
-		case R.id.checkBox3:
-			checkArray[2] = checked;
-			break;
 		case R.id.color1:
 			colorArray[0] = checked;
 			break;
@@ -220,6 +235,13 @@ public class NewDreamActivity extends Activity {
 		checkArray = new boolean[3];
 		colorArray = new boolean[3];
 
+		TextView cancelButton = (TextView) findViewById(R.id.newdream_cancel);
+		cancelButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				onBackPressed();
+			}
+		});
 		createButton = (TextView) findViewById(R.id.newdream_save);
 		createButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -230,11 +252,14 @@ public class NewDreamActivity extends Activity {
 				String note = ((EditText) findViewById(R.id.dreamNotesText))
 						.getText().toString();
 				List<Double> emotions = new ArrayList<Double>();
-				for (int i = 0; i < 3; i++) {
-					if (checkArray[i]) {
-						emotions.add((double) i);
-					}
-				}
+				if (mood!=-1)
+					emotions.add((double)mood);
+//				for (int i = 0; i < 3; i++) {
+//					if (checkArray[i]) {
+//						emotions.add((double) i);
+//					}
+//				}
+				
 				List<Double> colors = new ArrayList<Double>();
 				for (int i = 0; i < 3; i++) {
 					if (colorArray[i]) {

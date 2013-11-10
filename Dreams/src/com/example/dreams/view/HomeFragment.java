@@ -67,6 +67,7 @@ public class HomeFragment extends Fragment {
 		// started Activity.
 		// This ensures that navigating backward from the Activity leads out of
 		// your application to the Home screen.
+		@SuppressWarnings("deprecation")
 		TaskStackBuilder stackBuilder = TaskStackBuilder.from(c);
 		//TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 		// Adds the back stack for the Intent (but not the Intent itself)
@@ -137,8 +138,15 @@ public class HomeFragment extends Fragment {
 			createNotification(rootView.getContext());
 		} else {
 			sleepButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_bedtime));
+			cancelNotification();
 			startActivity(new Intent(rootView.getContext(), NewDreamActivity.class));
 		}
 		asleep = !asleep;
+	}
+	
+	public void cancelNotification() {
+	    String ns = Context.NOTIFICATION_SERVICE;
+	    NotificationManager nMgr = (NotificationManager) rootView.getContext().getSystemService(ns);
+	    nMgr.cancel(1);
 	}
 }
