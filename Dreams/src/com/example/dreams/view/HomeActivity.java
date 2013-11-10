@@ -125,19 +125,19 @@ public class HomeActivity extends Activity implements PopupMenu.OnMenuItemClickL
 				// ((OnRefreshListener)((ScreenSlidePagerAdapter)mPagerAdapter).getItem(position)).onRefresh();
 				switch (position) {
 				case 0:
-					i1.setBackgroundColor(Color.DKGRAY);
-					i2.setBackgroundColor(Color.WHITE);
-					i3.setBackgroundColor(Color.WHITE);
+					i1.setBackgroundColor(getResources().getColor(R.color.header_dark_blue));
+					i2.setBackgroundColor(getResources().getColor(R.color.header_blue));
+					i3.setBackgroundColor(getResources().getColor(R.color.header_blue));
 					break;
 				case 1:
-					i2.setBackgroundColor(Color.DKGRAY);
-					i3.setBackgroundColor(Color.WHITE);
-					i1.setBackgroundColor(Color.WHITE);
+					i2.setBackgroundColor(getResources().getColor(R.color.header_dark_blue));
+					i3.setBackgroundColor(getResources().getColor(R.color.header_blue));
+					i1.setBackgroundColor(getResources().getColor(R.color.header_blue));
 					break;
 				case 2:
-					i3.setBackgroundColor(Color.DKGRAY);
-					i1.setBackgroundColor(Color.WHITE);
-					i2.setBackgroundColor(Color.WHITE);
+					i3.setBackgroundColor(getResources().getColor(R.color.header_dark_blue));
+					i1.setBackgroundColor(getResources().getColor(R.color.header_blue));
+					i2.setBackgroundColor(getResources().getColor(R.color.header_blue));
 					break;
 				}
 				// When changing pages, reset the action bar actions since they

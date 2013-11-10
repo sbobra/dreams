@@ -7,21 +7,23 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white" >
+        android:background="@color/header_blue"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp" >
 
         <ImageView
             android:id="@+id/menuButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/menu_bar" 
-            android:onClick="showPopup" />
+            android:onClick="showPopup"
+            android:src="@drawable/ic_settings" />
 
         <ImageView
             android:id="@+id/newGoalButton"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
-            android:src="@drawable/search" />
+            android:src="@drawable/ic_search" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -33,19 +35,29 @@
                 android:id="@+id/imageView1"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/anyone" />
+                android:src="@drawable/ic_analytics" />
+
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_seperator" />
 
             <ImageView
                 android:id="@+id/imageView2"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/home" />
+                android:src="@drawable/ic_home" />
+
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_seperator" />
 
             <ImageView
                 android:id="@+id/imageView3"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/write" />
+                android:src="@drawable/ic_journal" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -53,6 +65,6 @@
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/gray" />
+        android:background="@color/white" />
 
 </LinearLayout>

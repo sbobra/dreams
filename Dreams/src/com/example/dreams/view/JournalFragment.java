@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -165,26 +166,34 @@ public class JournalFragment extends Fragment {
 			Date startTime = new Date(Long.valueOf(sleep.getStartTime()));
 			((TextView) row.findViewById(R.id.journal_row_date)).setText(startTime.toString());
 			float duration = Utils.millisToMins(Long.valueOf(sleep.getEndTime()) - Long.valueOf(sleep.getStartTime()));
-			((TextView) row.findViewById(R.id.journal_row_duration)).setText("Duration: " + duration + " mins");
-			((TextView) row.findViewById(R.id.journal_row_dream_name)).setText("Name: "+sleep.getDream().getName());
+			Log.i("JournalFragment", "Duration: " + duration);
+			//((TextView) row.findViewById(R.id.journal_row_duration)).setText("Duration: " + duration + " mins");
+			((TextView) row.findViewById(R.id.journal_row_dream_name)).setText(sleep.getDream().getName());
 			String colors = "";
 			for (int i = 0; i<sleep.getDream().getColors().size();i++) {
 				colors+=Constants.colors[sleep.getDream().getColors().get(i).intValue()] + ", ";
 			}
-			((TextView) row.findViewById(R.id.journal_row_colors)).setText("Colors: "
-					+ colors);
+			Log.i("JournalFragment", "Colors: " + colors);
+//			((TextView) row.findViewById(R.id.journal_row_colors)).setText("Colors: "
+//					+ colors);
 			String emotions = "";
 			for (int i = 0; i<sleep.getDream().getEmotions().size();i++) {
 				emotions+=Constants.emotions[sleep.getDream().getEmotions().get(i).intValue()] + ", ";
 			}
-			((TextView) row.findViewById(R.id.journal_row_emotions)).setText("Emotions: "
-					+ emotions);
+			if (sleep.getDream().getEmotions().get(0)!=null) {
+				int emotionId = sleep.getDream().getEmotions().get(0).intValue();
+				((ImageView) row.findViewById(R.id.journal_row_emotion)).setImageDrawable(getResources().getDrawable(Constants.emotionFadedIDs[emotionId]));
+			}
+			Log.i("JournalFragment", "Emotions: " + emotions);
+//			((TextView) row.findViewById(R.id.journal_row_emotions)).setText("Emotions: "
+//					+ emotions);
 			String tags = "";
 			for (int i = 0; i<sleep.getDream().getTags().size();i++) {
 				tags+=sleep.getDream().getTags().get(i) + " ";
 			}
-			((TextView) row.findViewById(R.id.journal_row_tags)).setText("Tags: "
-					+ tags);
+			Log.i("JournalFragment", "Tags: " + tags);
+//			((TextView) row.findViewById(R.id.journal_row_tags)).setText("Tags: "
+//					+ tags);
 
 			row.setOnClickListener(new View.OnClickListener() {
 				@Override
