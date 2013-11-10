@@ -1,7 +1,5 @@
 package com.example.dreams.db.entity;
 
-import java.util.Date;
-
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
@@ -23,6 +21,6 @@ public class Dream {
 	public ForeignCollection<DreamAudio> audios;
 	@ForeignCollectionField
 	public ForeignCollection<DreamTag> tags;
-	@DatabaseField
-	public Date timestamp;
+	@DatabaseField(foreign = true, canBeNull = false)
+	public Sleep sleep;
 }
