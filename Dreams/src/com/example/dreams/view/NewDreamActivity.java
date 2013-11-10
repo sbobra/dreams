@@ -25,6 +25,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.InjectView;
 import butterknife.Views;
@@ -47,16 +49,17 @@ public class NewDreamActivity extends Activity {
 	private boolean[] checkArray;
 
 	private boolean[] colorArray;
-	private Button createButton;
+	private TextView createButton;
 	@InjectView(R.id.play)
 	View playButton;
 	MediaRecorder recorder;
 	List<Double> recordings = new ArrayList<Double>();
-	@InjectView(R.id.start)
-	View startButton;
 
-	@InjectView(R.id.stop)
-	View stopButton;
+	@InjectView(R.id.recordButton)
+	ImageView recordButton;
+	
+	@InjectView(R.id.audioRecording)
+	View playAudio;
 
 	protected void addRecordingToMediaLibrary(String newName, String newPath) {
 
@@ -155,14 +158,14 @@ public class NewDreamActivity extends Activity {
 
 		return (mExternalStorageAvailable && mExternalStorageWriteable);
 	}
-	
+
 	@Override
 	public void onBackPressed() {
 		Bundle extras = getIntent().getExtras();
 
 		boolean launchedFromNotif = false;
 
-		if (extras.containsKey("LAUNCHED_BY_NOTIFICATION")) {
+		if (extras !=null && extras.containsKey("LAUNCHED_BY_NOTIFICATION")) {
 			launchedFromNotif = extras.getBoolean("LAUNCHED_BY_NOTIFICATION");
 		}
 
@@ -211,13 +214,13 @@ public class NewDreamActivity extends Activity {
 		this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_newdream);
-		
+
 		Views.inject(this);
-		
+
 		checkArray = new boolean[3];
 		colorArray = new boolean[3];
 
-		createButton = (Button) findViewById(R.id.createButton);
+		createButton = (TextView) findViewById(R.id.newdream_save);
 		createButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -229,7 +232,7 @@ public class NewDreamActivity extends Activity {
 				List<Double> emotions = new ArrayList<Double>();
 				for (int i = 0; i < 3; i++) {
 					if (checkArray[i]) {
-						emotions.add((double)i);
+						emotions.add((double) i);
 					}
 				}
 				List<Double> colors = new ArrayList<Double>();
@@ -247,10 +250,10 @@ public class NewDreamActivity extends Activity {
 				}
 				final Dream newDream = new Dream(name, note, emotions, colors,
 						tags, recordings);
-				
+
 				String bedtime = getLastBedTime();
-				final Sleep sleep = new Sleep(bedtime,
-						""+(System.currentTimeMillis()), newDream);
+				final Sleep sleep = new Sleep(bedtime, ""
+						+ (System.currentTimeMillis()), newDream);
 
 				Log.i("NewDreamActivity", name);
 				Log.i("NewDreamActivity", note);
@@ -340,8 +343,14 @@ public class NewDreamActivity extends Activity {
 
 	public void startRecording(View view) throws IOException {
 
-		startButton.setEnabled(false);
-		stopButton.setEnabled(true);
+		recordButton.setImageDrawable(getResources().getDrawable(R.drawable.stop));
+		recordButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				stopRecording(v);
+			}
+		});
+
 		clearTempDir();
 		if (mediaAvailable()) {
 			// File sampleDir = Environment.getExternalStorageDirectory();
@@ -368,10 +377,22 @@ public class NewDreamActivity extends Activity {
 	}
 
 	public void stopRecording(View view) {
-		startButton.setEnabled(true);
-		playButton.setEnabled(true);
-		stopButton.setEnabled(false);
 		recorder.stop();
 		recorder.release();
+
+		recordButton.setImageDrawable(getResources().getDrawable(R.drawable.record));
+		recordButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				try {
+					startRecording(v);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		playAudio.setVisibility(View.VISIBLE);
 	}
 }

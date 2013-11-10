@@ -4,12 +4,14 @@
     <color name="white">#FFFFFF</color>
     <color name="header_blue">#CFF0FF</color>
     <color name="header_dark_blue">#A9C9D6</color>
+    <color name="highlight_blue">#79BEDB</color>
     <color name="yellow">#FFFF00</color>
     <color name="fuchsia">#FF00FF</color>
     <color name="red">#FF0000</color>
     <color name="silver">#C0C0C0</color>
     <color name="gray">#E0E0E0</color>
     <color name="dark_gray">#D0D0D0</color>
+    <color name="very_dark_gray">#B0B0B0</color>
     <color name="olive">#808000</color>
     <color name="purple">#800080</color>
     <color name="maroon">#800000</color>

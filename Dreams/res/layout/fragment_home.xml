@@ -25,23 +25,17 @@
         android:id="@+id/homeContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:orientation="vertical" >
 
-        <TextView
-            android:id="@android:id/text1"
-            style="?android:textAppearanceLarge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:text="Home"
-            android:textStyle="bold" />
-
-        <Button
+        <ImageView
             android:id="@+id/sleepButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Go to sleep" />
-        
+            android:layout_width="400dp"
+            android:layout_height="400dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:src="@drawable/ic_bedtime" />
     </LinearLayout>
 
 </ScrollView>

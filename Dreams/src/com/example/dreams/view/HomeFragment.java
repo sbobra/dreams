@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.Views;
@@ -47,7 +48,7 @@ public class HomeFragment extends Fragment {
 	public ViewGroup rootView;
 
 	@InjectView(R.id.sleepButton)
-	Button sleepButton;
+	ImageView sleepButton;
 
 	public void createNotification(Context c) {
 		NotificationCompat.Builder mBuilder =
@@ -131,12 +132,12 @@ public class HomeFragment extends Fragment {
 	@OnClick(R.id.sleepButton)
 	public void sleepButtonClick() {
 		if (!asleep) {
-			sleepButton.setText("Wake up");
+			sleepButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_wakeup));
 			saveTime();
 			createNotification(rootView.getContext());
 		} else {
-			sleepButton.setText("Go to sleep");
-			//startActivity(new Intent(v.getContext(), NewDreamActivity.class));
+			sleepButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_bedtime));
+			startActivity(new Intent(rootView.getContext(), NewDreamActivity.class));
 		}
 		asleep = !asleep;
 	}

@@ -11,21 +11,6 @@
         android:orientation="vertical"
         android:padding="16dp" >
 
-        <TextView
-            android:id="@android:id/text1"
-            style="?android:textAppearanceLarge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:text="Journal"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/refreshButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Refresh" />
-
         <TableLayout
             android:id="@+id/tableLayout"
             android:layout_width="match_parent"
@@ -33,6 +18,12 @@
             android:background="@color/white" >
 
         </TableLayout>
+        
+        <Button
+            android:id="@+id/refreshButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Refresh" />
     </LinearLayout>
 
 </ScrollView>

@@ -7,99 +7,157 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin" >
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@color/gray" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="New Dream"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/newdream_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:text="Cancel"
+                android:textColor="@color/very_dark_gray"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/newdream_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:text="Save"
+                android:textColor="@color/highlight_blue"
+                android:textSize="20sp" />
+        </RelativeLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="3dp"
+            android:background="@color/gray"
+            android:gravity="center_vertical"
             android:orientation="horizontal" >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Dream Name" />
-
-            <EditText
-                android:id="@+id/dreamNameText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Dream 1" />
+                android:layout_marginLeft="5dp"
+                android:text="TITLE"
+                android:textColor="@color/very_dark_gray"
+                android:textSize="15sp" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/dreamNotesText"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Enter the title of your dream" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="3dp"
+            android:background="@color/gray"
+            android:gravity="center_vertical"
             android:orientation="horizontal" >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Notes" />
-
-            <EditText
-                android:id="@+id/dreamNotesText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:lines="5"
-                android:singleLine="false" >
-
-                <requestFocus />
-            </EditText>
+                android:layout_marginLeft="5dp"
+                android:text="NARRATE"
+                android:textColor="@color/very_dark_gray"
+                android:textSize="15sp" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/recordButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:onClick="startRecording"
+                android:src="@drawable/record" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/dreamNameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Type details if desired..."
+            android:lines="3"
+            android:singleLine="false" >
+
+            <requestFocus />
+        </EditText>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:id="@+id/audioRecording"
+            android:visibility="gone"
+            android:layout_weight="1" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="5dp"
+                android:layout_centerVertical="true"
+                android:text="Audio Recording 1"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+            
+            <ImageView
+                android:id="@+id/play"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="15dp"
+                android:onClick="playRecording"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_little_play" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="3dp"
+            android:background="@color/gray"
+            android:gravity="center_vertical"
             android:orientation="horizontal" >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tags (w/ spaces)" />
-
-            <EditText
-                android:id="@+id/dreamTagsText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10" />
+                android:layout_marginLeft="5dp"
+                android:text="MOOD"
+                android:textColor="@color/very_dark_gray"
+                android:textSize="15sp" />
         </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Color" />
-
-        <CheckBox
-            android:id="@+id/color1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onCheckboxClicked"
-            android:text="Red" />
-
-        <CheckBox
-            android:id="@+id/color2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onCheckboxClicked"
-            android:text="Green" />
-
-        <CheckBox
-            android:id="@+id/color3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="onCheckboxClicked"
-            android:text="Blue" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Emotion" />
 
         <CheckBox
             android:id="@+id/checkBox1"
@@ -122,35 +180,66 @@
             android:onClick="onCheckboxClicked"
             android:text="Neutral" />
 
-        <Button
-            android:id="@+id/start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="startRecording"
-            android:text="Start Recording" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="3dp"
+            android:background="@color/gray"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
 
-        <Button
-            android:id="@+id/stop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:enabled="false"
-            android:onClick="stopRecording"
-            android:text="Stop Recording" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="COLORS"
+                android:textColor="@color/very_dark_gray"
+                android:textSize="15sp" />
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/play"
+        <CheckBox
+            android:id="@+id/color1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:enabled="false"
-            android:onClick="playRecording"
-            android:text="Play" />
+            android:onClick="onCheckboxClicked"
+            android:text="Red" />
 
-        <Button
-            android:id="@+id/createButton"
+        <CheckBox
+            android:id="@+id/color2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:text="Create" />
+            android:onClick="onCheckboxClicked"
+            android:text="Green" />
+
+        <CheckBox
+            android:id="@+id/color3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onCheckboxClicked"
+            android:text="Blue" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="3dp"
+            android:background="@color/gray"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="TAGS"
+                android:textColor="@color/very_dark_gray"
+                android:textSize="15sp" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/dreamTagsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10" />
     </LinearLayout>
 
 </ScrollView>
