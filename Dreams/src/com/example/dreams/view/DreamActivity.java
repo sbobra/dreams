@@ -126,16 +126,14 @@ public class DreamActivity extends Activity {
 		((ImageView) findViewById(R.id.mood1)).setAlpha(0.2f);
 		((ImageView) findViewById(R.id.mood2)).setAlpha(0.2f);
 		((ImageView) findViewById(R.id.mood3)).setAlpha(0.2f);
-
-		int emotionImageId = Constants.emotionIDs[emotionId];
-		switch(emotionImageId) {
-		case R.drawable.ic_happy_black:
+		switch (emotionId) {
+		case 0:
 			((ImageView) findViewById(R.id.mood1)).setAlpha(1f);
 			break;
-		case R.drawable.ic_meh_black:
+		case 1:
 			((ImageView) findViewById(R.id.mood2)).setAlpha(1f);
 			break;
-		case R.drawable.ic_sad_black:
+		case 2:
 			((ImageView) findViewById(R.id.mood3)).setAlpha(1f);
 			break;
 		}
@@ -203,6 +201,17 @@ public class DreamActivity extends Activity {
 								String emotions = "";
 								for (int i = 0; i < sleep.getDream()
 										.getEmotions().size(); i++) {
+									if (i == 0) {
+										Log.i("DreamActivity",
+												"Setting emotion: "
+														+ sleep.getDream()
+																.getEmotions()
+																.get(i)
+																.intValue());
+										setEmotion(sleep.getDream()
+												.getEmotions().get(i)
+												.intValue());
+									}
 									emotions += Constants.emotions[sleep
 											.getDream().getEmotions().get(i)
 											.intValue()]
