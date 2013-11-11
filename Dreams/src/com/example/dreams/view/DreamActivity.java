@@ -2,6 +2,8 @@ package com.example.dreams.view;
 
 import java.io.File;
 
+import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,6 +22,13 @@ import com.example.dreams.db.entity.Dream;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 
 public class DreamActivity extends OrmLiteBaseActivity<DatabaseHelper> {
+	private static final String EXTRA_DREAM_ID = "com.example.dreams.extras.DREAM_ID";
+
+	public static void startActivity(Context context, Dream dream) {
+		context.startActivity(new Intent(context, DreamActivity.class)
+				.putExtra(EXTRA_DREAM_ID, dream.id));
+	}
+
 	@InjectView(R.id.journal_button_layout)
 	LinearLayout layoutJournalButtons;
 	private Dream dream;
@@ -35,7 +44,7 @@ public class DreamActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 	TextView textDreamName;
 	@InjectView(R.id.dream_tags)
 	TextView textDreamTags;
-	
+
 	@OnClick(R.id.deleteButton)
 	public void deleteDream() {
 		if (dream != null) {
@@ -61,10 +70,12 @@ public class DreamActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 	}
 
 	public void fetchDream() {
-
-		Bundle b = getIntent().getExtras();
-		int id = b.getInt("id");
-		getHelper().getDreamDao().queryForId(id);
+		if (getIntent().hasExtra(EXTRA_DREAM_ID)) {
+			getHelper().getDreamDao().queryForId(
+					getIntent().getIntExtra(EXTRA_DREAM_ID, 0));
+		} else {
+			throw new RuntimeException("Dream ID must be given.");
+		}
 	}
 
 	@Override
@@ -78,7 +89,7 @@ public class DreamActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 
 		fetchDream();
 	}
-	
+
 	public void playRecording(int n) {
 		String path = Environment.getExternalStorageDirectory().toString()
 				+ "/dreamCatcher/file-" + Constants.getFileName(n) + ".3gp";

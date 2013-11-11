@@ -1,18 +1,14 @@
 package com.example.dreams.view;
 
-import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -21,8 +17,11 @@ import butterknife.OnClick;
 import butterknife.Views;
 
 import com.example.dreams.R;
-import com.example.dreams.Utils;
 import com.example.dreams.db.DatabaseHelper;
+import com.example.dreams.db.entity.Dream;
+import com.example.dreams.db.entity.DreamColor;
+import com.example.dreams.db.entity.DreamEmotion;
+import com.example.dreams.db.entity.DreamTag;
 import com.example.dreams.db.entity.Sleep;
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 
@@ -103,74 +102,55 @@ public class JournalFragment extends Fragment {
 		onRefresh();
 	}
 
-	public void populate(final Sleep sleep) {
+	public void populate(Sleep sleep) {
 		if (rootView != null) {
-			if (sleep.getDream() != null) {
+			for (final Dream dream : sleep.dreams) {
 				TableLayout table = (TableLayout) rootView
 						.findViewById(R.id.tableLayout);
 				// Inflate your row "template" and fill out the fields.
 				final TableRow row = (TableRow) LayoutInflater.from(
 						rootView.getContext()).inflate(
 						R.layout.row_journal_table, null);
-				Date startTime = new Date(Long.valueOf(sleep.getStartTime()));
 				((TextView) row.findViewById(R.id.journal_row_date))
-						.setText(startTime.toString());
-				float duration = Utils.millisToMins(Long.valueOf(sleep
-						.getEndTime()) - Long.valueOf(sleep.getStartTime()));
+					.setText(sleep.date.toString());
+				float duration = sleep.duration;
 				Log.i("JournalFragment", "Duration: " + duration);
 				// ((TextView)
 				// row.findViewById(R.id.journal_row_duration)).setText("Duration: "
 				// + duration + " mins");
-				if (sleep.getDream().getName() != null)
+				if (dream.name != null)
 					((TextView) row.findViewById(R.id.journal_row_dream_name))
-							.setText(sleep.getDream().getName());
-				String colors = "";
-				for (int i = 0; i < sleep.getDream().getColors().size(); i++) {
-					colors += Constants.colors[sleep.getDream().getColors()
-							.get(i).intValue()]
-							+ ", ";
+							.setText(dream.name);
+
+				StringBuilder colorBuilder = new StringBuilder();
+				for (DreamColor color : dream.colors) {
+					colorBuilder.append(color.color.name());
+					colorBuilder.append(", ");
 				}
-				Log.i("JournalFragment", "Colors: " + colors);
-				// ((TextView)
-				// row.findViewById(R.id.journal_row_colors)).setText("Colors: "
-				// + colors);
-				String emotions = "";
-				for (int i = 0; i < sleep.getDream().getEmotions().size(); i++) {
-					emotions += Constants.emotions[sleep.getDream()
-							.getEmotions().get(i).intValue()]
-							+ ", ";
+				Log.i("JournalFragment", "Colors: " + colorBuilder);
+				// ((TextView) row.findViewById(R.id.journal_row_colors)).setText("Colors: " + colors);
+				StringBuilder emotionBuilder = new StringBuilder();
+				for (DreamEmotion emotion : dream.emotions) {
+					emotionBuilder.append(emotion.emotion);
+					emotionBuilder.append(", ");
 				}
-				if (sleep.getDream().getEmotions().size() > 0) {
-					int emotionId = sleep.getDream().getEmotions().get(0)
-							.intValue();
-					((ImageView) row.findViewById(R.id.journal_row_emotion))
-							.setImageDrawable(getResources().getDrawable(
-									Constants.emotionFadedIDs[emotionId]));
+				Log.i("JournalFragment", "Emotions: " + emotionBuilder);
+				// ((TextView) row.findViewById(R.id.journal_row_emotions)).setText("Emotions: " + emotions);
+				StringBuilder tagBuilder = new StringBuilder();
+				for (DreamTag tag : dream.tags) {
+					tagBuilder.append(tag.tag);
+					tagBuilder.append(", ");
 				}
-				Log.i("JournalFragment", "Emotions: " + emotions);
-				// ((TextView)
-				// row.findViewById(R.id.journal_row_emotions)).setText("Emotions: "
-				// + emotions);
-				String tags = "";
-				for (int i = 0; i < sleep.getDream().getTags().size(); i++) {
-					tags += sleep.getDream().getTags().get(i) + " ";
-				}
-				Log.i("JournalFragment", "Tags: " + tags);
-				// ((TextView)
-				// row.findViewById(R.id.journal_row_tags)).setText("Tags: "
-				// + tags);
+
+				Log.i("JournalFragment", "Tags: " + tagBuilder);
+				// ((TextView) row.findViewById(R.id.journal_row_tags)).setText("Tags: " + tags);
 
 				row.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						Log.i("ListFragment",
-								"Dream pressed! Dream: " + sleep.getID());
-						Intent intent = new Intent(rootView.getContext(),
-								DreamActivity.class);
-						Bundle bundle = new Bundle();
-						bundle.putString("id", sleep.getID());
-						intent.putExtras(bundle);
-						startActivity(intent);
+								"Dream pressed! Dream: " + dream.id);
+						DreamActivity.startActivity(getActivity(), dream);
 					}
 				});
 
@@ -198,15 +178,13 @@ public class JournalFragment extends Fragment {
 	}
 
 	public void updateTable() {
-		for (int i = 0; i < sleepList.length; i++) {
-			final Sleep s = sleepList[i];
+		for (final Sleep sleep : sleepList) {
 			getActivity().runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
-					populate(s);
+					populate(sleep);
 				}
 			});
-
 		}
 	}
 }
