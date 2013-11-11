@@ -1,37 +1,22 @@
 package com.example.dreams.view;
-import java.util.Arrays;
-import java.util.List;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.Views;
 
 import com.example.dreams.R;
-import com.example.dreams.Utils;
-import com.example.dreams.model.State;
-import com.example.dreams.model.User;
+import com.example.dreams.db.DatabaseHelper;
+import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.stackmob.android.sdk.common.StackMobAndroid;
-import com.stackmob.sdk.api.StackMob;
-import com.stackmob.sdk.api.StackMobOptions;
-import com.stackmob.sdk.api.StackMobQuery;
-import com.stackmob.sdk.callback.StackMobModelCallback;
-import com.stackmob.sdk.callback.StackMobQueryCallback;
-import com.stackmob.sdk.exception.StackMobException;
-import com.stackmob.sdk.model.StackMobModel;
-import com.stackmob.sdk.model.StackMobUser;
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 	@InjectView(R.id.loginButton)
 	Button loginButton;
 	@InjectView(R.id.nameLayout)
@@ -46,47 +31,11 @@ public class LoginActivity extends Activity {
 	EditText usernameTextBox;
 
 	public void checkLogin() {
-		if(StackMob.getStackMob().isLoggedIn()) {
-		    StackMobUser.getLoggedInUser(User.class, new StackMobQueryCallback<User>() {
-				@Override
-				public void failure(StackMobException arg0) {
-					// continue with login process
-					Log.i("LoginController", "No logged in user found!");
-
-				}
-
-				@Override
-				public void success(List<User> arg0) {
-					// TODO Auto-generated method stub
-					Log.i("LoginController", "User already logged in!");
-		            User loggedInUser = arg0.get(0);
-		            State.getInstance().setUsername(loggedInUser.getUsername());
-		            getUserData(State.getInstance().getUsername());
-				}
-		    });
-		}
+		// TODO: do something?
 	}
 
 	public void getUserData(String username) {
-		String query = "user/" + username;
-		StackMobQuery q = new StackMobQuery(query);
-		StackMobModel.query(User.class, q,
-				StackMobOptions.selectedFields(Arrays.asList("name")),
-				new StackMobQueryCallback<User>() {
-					@Override
-					public void failure(StackMobException e) {
-						Log.i("LoginController", e.getMessage());
-					}
-
-					@Override
-					public void success(List<User> arg0) {
-						State.getInstance().setName(arg0.get(0).getName());
-						Log.i("LoginController", "Welcome, "
-								+ State.getInstance().getName());
-						startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-						finish();
-					}
-				});
+		// TODO: do something?
 	}
 	
 	@OnClick(R.id.loginButton)
@@ -114,22 +63,7 @@ public class LoginActivity extends Activity {
 	}
 
 	public void onLoginPressed(final String username, String password) {
-		password = Utils.sha256(password);
-		User user = new User(username, password);
-		user.login(new StackMobModelCallback() {
-
-			@Override
-			public void failure(StackMobException e) {
-				Log.i("LoginController", e.getMessage());
-			}
-
-			@Override
-			public void success() {
-				Log.i("LoginController", "Successful login!");
-				getUserData(username);
-			}
-		});
-
+		// TODO: do something?
 	}
 
 	@OnClick(R.id.newAcctButton)
@@ -140,29 +74,7 @@ public class LoginActivity extends Activity {
 
 	public void onNewUserPressed(final String name, final String username,
 			String password) {
-		password = Utils.sha256(password);
-		User user = new User(name, username, password);
-		user.save(new StackMobModelCallback() {
-			@Override
-			public void failure(StackMobException e) {
-				Toast.makeText(getApplicationContext(), "error!",
-						Toast.LENGTH_SHORT).show();
-
-				Log.i("LoginController", e.getMessage());
-			}
-
-			@Override
-			public void success() {
-				// TODO: save username and password for persistent login
-				Log.i("LoginController", "Successful new user!");
-				State.getInstance().setName(name);
-				State.getInstance().setLoggedIn(true);
-
-				startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-				finish();
-
-			}
-		});
+		// TODO: do something?
 
 	}
 }

@@ -13,7 +13,7 @@ import com.example.dreams.db.entity.DreamEmotion;
 import com.example.dreams.db.entity.DreamTag;
 import com.example.dreams.db.entity.Sleep;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
-import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
@@ -21,12 +21,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	private static final String DATABASE_NAME = "dreams.db";
 	private static final int DATABASE_VERSION = 1;
 	
-	private Dao<Dream, Integer> dreamDao = null;
-	private Dao<DreamAudio, Integer> dreamAudioDao = null;
-	private Dao<DreamColor, Integer> dreamColorDao = null;
-	private Dao<DreamEmotion, Integer> dreamEmotionDao = null;
-	private Dao<DreamTag, Integer> dreamTagDao = null;
-	private Dao<Sleep, Date> sleepDao = null;
+	private RuntimeExceptionDao<Dream, Integer> dreamDao = null;
+	private RuntimeExceptionDao<DreamAudio, Integer> dreamAudioDao = null;
+	private RuntimeExceptionDao<DreamColor, Integer> dreamColorDao = null;
+	private RuntimeExceptionDao<DreamEmotion, Integer> dreamEmotionDao = null;
+	private RuntimeExceptionDao<DreamTag, Integer> dreamTagDao = null;
+	private RuntimeExceptionDao<Sleep, Date> sleepDao = null;
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -57,44 +57,44 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		// do nothing...
 	}
 
-	public Dao<Dream, Integer> getDreamDao() throws SQLException {
+	public RuntimeExceptionDao<Dream, Integer> getDreamDao() {
 		if (dreamDao == null) {
-			dreamDao = getDao(Dream.class);
+			dreamDao = getRuntimeExceptionDao(Dream.class);
 		}
 		return dreamDao;
 	}
 
-	public Dao<DreamAudio, Integer> getDreamAudioDao() throws SQLException {
+	public RuntimeExceptionDao<DreamAudio, Integer> getDreamAudioDao() {
 		if (dreamAudioDao == null) {
-			dreamAudioDao = getDao(DreamAudio.class);
+			dreamAudioDao = getRuntimeExceptionDao(DreamAudio.class);
 		}
 		return dreamAudioDao;
 	}
 
-	public Dao<DreamColor, Integer> getDreamColorDao() throws SQLException {
+	public RuntimeExceptionDao<DreamColor, Integer> getDreamColorDao() {
 		if (dreamColorDao == null) {
-			dreamColorDao = getDao(DreamColor.class);
+			dreamColorDao = getRuntimeExceptionDao(DreamColor.class);
 		}
 		return dreamColorDao;
 	}
 
-	public Dao<DreamEmotion, Integer> getDreamEmotionDao() throws SQLException {
+	public RuntimeExceptionDao<DreamEmotion, Integer> getDreamEmotionDao() {
 		if (dreamEmotionDao == null) {
-			dreamEmotionDao = getDao(DreamEmotion.class);
+			dreamEmotionDao = getRuntimeExceptionDao(DreamEmotion.class);
 		}
 		return dreamEmotionDao;
 	}
 
-	public Dao<DreamTag, Integer> getDreamTagDao() throws SQLException {
+	public RuntimeExceptionDao<DreamTag, Integer> getDreamTagDao() {
 		if (dreamTagDao == null) {
-			dreamTagDao = getDao(DreamTag.class);
+			dreamTagDao = getRuntimeExceptionDao(DreamTag.class);
 		}
 		return dreamTagDao;
 	}
 
-	public Dao<Sleep, Date> getSleepDao() throws SQLException {
+	public RuntimeExceptionDao<Sleep, Date> getSleepDao() {
 		if (sleepDao == null) {
-			sleepDao = getDao(Sleep.class);
+			sleepDao = getRuntimeExceptionDao(Sleep.class);
 		}
 		return sleepDao;
 	}

@@ -4,9 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -22,7 +23,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -32,17 +32,17 @@ import butterknife.InjectView;
 import butterknife.Views;
 
 import com.example.dreams.R;
-import com.example.dreams.model.Dream;
-import com.example.dreams.model.Sleep;
-import com.example.dreams.model.User;
-import com.stackmob.sdk.api.StackMob;
-import com.stackmob.sdk.api.StackMobOptions;
-import com.stackmob.sdk.callback.StackMobModelCallback;
-import com.stackmob.sdk.callback.StackMobQueryCallback;
-import com.stackmob.sdk.exception.StackMobException;
-import com.stackmob.sdk.model.StackMobUser;
+import com.example.dreams.db.DatabaseHelper;
+import com.example.dreams.db.entity.Dream;
+import com.example.dreams.db.entity.DreamAudio;
+import com.example.dreams.db.entity.DreamColor;
+import com.example.dreams.db.entity.DreamColor.Color;
+import com.example.dreams.db.entity.DreamEmotion;
+import com.example.dreams.db.entity.DreamTag;
+import com.example.dreams.db.entity.Sleep;
+import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 
-public class NewDreamActivity extends Activity {
+public class NewDreamActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 	public static final String PREFS_NAME = "timeStamps";
 	private static final String TAG = "SoundRecordingActivity";
 	File audiofile = null;
@@ -248,12 +248,50 @@ public class NewDreamActivity extends Activity {
 				for (int i = 0; i < tagsArray.length; i++) {
 					tags.add(tagsArray[i]);
 				}
-				final Dream newDream = new Dream(name, note, emotions, colors,
-						tags, recordings);
+				
+				Sleep sleep = new Sleep();
+				Calendar cal = Calendar.getInstance();
+				cal.getTime();
+				cal.setTimeZone(TimeZone.getTimeZone("UTC"));
+				cal.set(Calendar.HOUR_OF_DAY, 0);
+				cal.set(Calendar.MINUTE, 0);
+				cal.set(Calendar.SECOND, 0);
+				cal.set(Calendar.MILLISECOND, 0);
+				sleep.date = cal.getTime();
+				getHelper().getSleepDao().createIfNotExists(sleep);
+				// TODO: set the length of the sleep
+				
+				Dream dream = new Dream();
+				dream.name = name;
+				dream.note = note;
+				dream.sleep = sleep;
+				
+				getHelper().getDreamDao().create(dream);
+				
+				for (Double emotion : emotions) {
+					DreamEmotion dreamEmotion = new DreamEmotion();
+					dreamEmotion.emotion = emotion.toString(); // TODO: write the emotion in as a real string
+					dream.emotions.add(dreamEmotion);
+				}
 
-				String bedtime = getLastBedTime();
-				final Sleep sleep = new Sleep(bedtime, ""
-						+ (System.currentTimeMillis()), newDream);
+				for (Double color : colors) {
+					DreamColor dreamColor= new DreamColor();
+					dreamColor.color = Color.BLUE; // TODO: write a proper colour here
+					dream.colors.add(dreamColor);
+				}
+				
+				for (String tag : tags) {
+					DreamTag dreamTag = new DreamTag();
+					dreamTag.tag = tag;
+					dream.tags.add(dreamTag);
+				}
+
+				for (Double recording : recordings) {
+					DreamAudio dreamAudio = new DreamAudio();
+					dreamAudio.audio = recording.toString(); // TODO: write a proper audio reference here
+					dream.audios.add(dreamAudio);
+					
+				}
 
 				Log.i("NewDreamActivity", name);
 				Log.i("NewDreamActivity", note);
@@ -262,44 +300,6 @@ public class NewDreamActivity extends Activity {
 				Log.i("NewDreamActivity", "num colors: " + colors.size());
 				Log.i("NewDreamActivity",
 						"num recordings: " + recordings.size());
-
-				if (StackMob.getStackMob().isLoggedIn()) {
-					StackMobUser.getLoggedInUser(User.class,
-							new StackMobQueryCallback<User>() {
-								@Override
-								public void failure(StackMobException arg0) {
-									// continue with login process
-									Log.i("NewDreamActivity",
-											"No logged in user found!");
-
-								}
-
-								@Override
-								public void success(List<User> arg0) {
-									// TODO Auto-generated method stub
-									User loggedInUser = arg0.get(0);
-									loggedInUser.getSleepList().add(sleep);
-									loggedInUser.getDreamList().add(sleep);
-									Log.i("NewDreamActivity", "Found user");
-									loggedInUser.save(
-											StackMobOptions.depthOf(3),
-											new StackMobModelCallback() {
-												@Override
-												public void failure(
-														StackMobException e) {
-													Log.i("NewDreamActivity",
-															e.getMessage());
-												}
-
-												@Override
-												public void success() {
-													Log.i("NewDreamActivity",
-															"Dream and sleep saved!");
-												}
-											});
-								}
-							});
-				}
 
 				onBackPressed();
 			}

@@ -1,14 +1,10 @@
 package com.example.dreams.view;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,12 +16,11 @@ import butterknife.InjectView;
 import butterknife.Views;
 
 import com.example.dreams.R;
-import com.example.dreams.model.State;
-import com.example.dreams.model.User;
-import com.stackmob.sdk.callback.StackMobModelCallback;
-import com.stackmob.sdk.exception.StackMobException;
+import com.example.dreams.db.DatabaseHelper;
+import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 
-public class HomeActivity extends Activity implements PopupMenu.OnMenuItemClickListener{
+public class HomeActivity extends OrmLiteBaseActivity<DatabaseHelper>
+		implements PopupMenu.OnMenuItemClickListener{
 
 	/**
 	 * A simple pager adapter that represents 5 {@link ScreenSlidePageFragment}
@@ -88,22 +83,7 @@ public class HomeActivity extends Activity implements PopupMenu.OnMenuItemClickL
 	ImageView newGoal;
 
 	public void logout() {
-		User user = new User(State.getInstance().getUsername(), State
-				.getInstance().getPassword());
-		user.logout(new StackMobModelCallback() {
-			@Override
-			public void failure(StackMobException arg0) {
-				Log.i("HomeController", arg0.getMessage());
-			}
-
-			@Override
-			public void success() {
-				//TODO: logout on shared preferences
-				Log.i("HomeController", "Successful logout!");
-				startActivity(new Intent(HomeActivity.this, LoginActivity.class));
-				finish();
-			}
-		});
+		// TODO: do something...
 	}
 
 	@Override
