@@ -3,6 +3,8 @@ package com.example.dreams.view;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -35,6 +37,8 @@ public class JournalFragment extends Fragment {
 	 * The argument key for the page number this fragment represents.
 	 */
 	public static final String ARG_PAGE = "page";
+	
+	private Timer checkFilesTimer;
 
 	/**
 	 * Factory method for this fragment class. Constructs a new fragment for the
@@ -45,6 +49,7 @@ public class JournalFragment extends Fragment {
 		Bundle args = new Bundle();
 		args.putInt(ARG_PAGE, pageNumber);
 		fragment.setArguments(args);
+
 		return fragment;
 	}
 
@@ -62,12 +67,16 @@ public class JournalFragment extends Fragment {
 	Sleep[] sleepList;
 
 	public void clearTable() {
-		if (rootView != null) {
-			TableLayout table = (TableLayout) rootView
-					.findViewById(R.id.tableLayout);
-			table.removeAllViews();
-		}
-
+		getActivity().runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if (rootView != null) {
+					TableLayout table = (TableLayout) rootView
+							.findViewById(R.id.tableLayout);
+					table.removeAllViews();
+				}
+			}
+		});
 	}
 
 	/**
@@ -79,8 +88,18 @@ public class JournalFragment extends Fragment {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		Log.i("JournalFragment", "onCreate");
 		super.onCreate(savedInstanceState);
 		mPageNumber = getArguments().getInt(ARG_PAGE);
+		
+		TimerTask checkFilesTask = new TimerTask() {
+            public void run() {
+                Log.i("JournalFragment", "refreshing");
+                onRefresh();
+            }
+        };
+		checkFilesTimer = new Timer();
+        checkFilesTimer.schedule(checkFilesTask, 0, 10000);
 	}
 
 	@Override

@@ -141,7 +141,7 @@ public class LoginActivity extends Activity {
 	public void onNewUserPressed(final String name, final String username,
 			String password) {
 		password = Utils.sha256(password);
-		User user = new User(name, username, password);
+		final User user = new User(name, username, password);
 		user.save(new StackMobModelCallback() {
 			@Override
 			public void failure(StackMobException e) {
@@ -157,9 +157,23 @@ public class LoginActivity extends Activity {
 				Log.i("LoginController", "Successful new user!");
 				State.getInstance().setName(name);
 				State.getInstance().setLoggedIn(true);
+				
+				user.login(new StackMobModelCallback() {
 
-				startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-				finish();
+					@Override
+					public void failure(StackMobException e) {
+						Log.i("LoginController", e.getMessage());
+					}
+
+					@Override
+					public void success() {
+						Log.i("LoginController", "Successful login!");
+						getUserData(username);
+					}
+				});
+
+//				startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+//				finish();
 
 			}
 		});
