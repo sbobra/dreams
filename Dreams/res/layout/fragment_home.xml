@@ -14,28 +14,146 @@
   limitations under the License.
 -->
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/homeContent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
-    <!-- Dummy content. -->
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:orientation="vertical" >
 
     <LinearLayout
-        android:id="@+id/homeContent"
+        android:id="@+id/bottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray"
         android:orientation="vertical" >
 
-        <ImageView
-            android:id="@+id/sleepButton"
-            android:layout_width="400dp"
-            android:layout_height="400dp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:src="@drawable/ic_bedtime" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="85dp"
+            android:id="@+id/sleepBarButton"
+            android:background="@drawable/bottom_border" >
+
+            <ImageView
+                android:id="@+id/sleepButton"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/sleep" />
+
+            <TextView
+                android:id="@+id/goingToSleepText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:text="Going to sleep"
+                android:textColor="@color/black"
+                android:textSize="25sp" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/trackingText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/goingToSleepText"
+                android:layout_centerHorizontal="true"
+                android:text="Start Tracking"
+                android:textColor="@color/black"
+                android:textSize="15sp" >
+            </TextView>
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/arrow" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:id="@+id/quickRecordBarButton"
+            android:layout_height="85dp" >
+
+            <ImageView
+                android:id="@+id/sleepButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/record2" />
+
+            <TextView
+                android:id="@+id/goingToSleepText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="15dp"
+                android:text="Quick Record"
+                android:textColor="@color/black"
+                android:textSize="25sp" >
+            </TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/goingToSleepText"
+                android:layout_centerHorizontal="true"
+                android:text="New Dream"
+                android:textColor="@color/black"
+                android:textSize="15sp" >
+            </TextView>
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/arrow" />
+        </RelativeLayout>
     </LinearLayout>
 
-</ScrollView>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical"
+            android:gravity="center" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/orange"
+                android:textSize="40sp" >
+            </TextView>
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DREAMS"
+                android:textColor="@color/orange"
+                android:textSize="12sp" >
+            </TextView>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/circle" />
+    </RelativeLayout>
+
+</RelativeLayout>

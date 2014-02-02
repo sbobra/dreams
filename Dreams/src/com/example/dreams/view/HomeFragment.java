@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import butterknife.InjectView;
 import butterknife.OnClick;
 import butterknife.Views;
@@ -49,6 +50,10 @@ public class HomeFragment extends Fragment {
 
 	@InjectView(R.id.sleepButton)
 	ImageView sleepButton;
+	@InjectView(R.id.goingToSleepText)
+	TextView sleepText;
+	@InjectView(R.id.trackingText)
+	TextView trackingText;
 
 	public void createNotification(Context c) {
 		NotificationCompat.Builder mBuilder =
@@ -130,16 +135,20 @@ public class HomeFragment extends Fragment {
 		editor.commit();
 	}
 
-	@OnClick(R.id.sleepButton)
+	@OnClick(R.id.sleepBarButton)
 	public void sleepButtonClick() {
 		if (!asleep) {
 			sleepButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_wakeup));
+			sleepText.setText("Wake up");
+			trackingText.setText("Stop Tracking");
 			saveTime();
 			createNotification(rootView.getContext());
 		} else {
-			sleepButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_bedtime));
+			sleepButton.setImageDrawable(getResources().getDrawable(R.drawable.sleep));
 			cancelNotification();
 			startActivity(new Intent(rootView.getContext(), NewDreamActivity.class));
+			sleepText.setText("Going to sleep");
+			trackingText.setText("Start Tracking");
 		}
 		asleep = !asleep;
 	}

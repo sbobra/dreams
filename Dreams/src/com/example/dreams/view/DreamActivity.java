@@ -1,6 +1,7 @@
 package com.example.dreams.view;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -36,6 +37,7 @@ public class DreamActivity extends Activity {
 	// @InjectView(R.id.journal_button_layout)
 	// LinearLayout layoutJournalButtons;
 	private Sleep mySleep;
+	private CircleImageView[] colorCircleList;
 	// @InjectView(R.id.dream_colors)
 	// TextView textDreamColors;
 	@InjectView(R.id.dream_date)
@@ -193,9 +195,12 @@ public class DreamActivity extends Activity {
 								String colors = "";
 								for (int i = 0; i < sleep.getDream()
 										.getColors().size(); i++) {
-									colors += Constants.colors[sleep.getDream()
-											.getColors().get(i).intValue()]
-											+ ", ";
+									int iColor = sleep.getDream()
+											.getColors().get(i).intValue();
+									colors += iColor + ", ";
+									if (i<4) {
+										colorCircleList[i].setColor(iColor);
+									}
 								}
 								// textDreamColors.setText("Colors: " + colors);
 								String emotions = "";
@@ -298,6 +303,12 @@ public class DreamActivity extends Activity {
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_dream_new);
 		Views.inject(this);
+
+		colorCircleList = new CircleImageView[4];
+		colorCircleList[0] = (CircleImageView)this.findViewById(R.id.c1);
+		colorCircleList[1] = (CircleImageView)this.findViewById(R.id.c2);
+		colorCircleList[2] = (CircleImageView)this.findViewById(R.id.c3);
+		colorCircleList[3] = (CircleImageView)this.findViewById(R.id.c4);
 
 		fetchDream();
 	}

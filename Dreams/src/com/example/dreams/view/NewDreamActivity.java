@@ -7,10 +7,17 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -242,6 +249,36 @@ public class NewDreamActivity extends Activity {
 				onBackPressed();
 			}
 		});
+		
+		CircleImageView colorPickerButton = (CircleImageView) findViewById(R.id.c1);
+		colorPickerButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showColorDialog(v);
+			}
+		});
+		
+		CircleImageView cButton2 = (CircleImageView) findViewById(R.id.c2);
+		cButton2.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showColorDialog(v);
+			}
+		});
+		CircleImageView cButton3 = (CircleImageView) findViewById(R.id.c3);
+		cButton3.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showColorDialog(v);
+			}
+		});
+		CircleImageView cButton4 = (CircleImageView) findViewById(R.id.c4);
+		cButton4.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showColorDialog(v);
+			}
+		});
 		createButton = (TextView) findViewById(R.id.newdream_save);
 		createButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -261,11 +298,15 @@ public class NewDreamActivity extends Activity {
 //				}
 				
 				List<Double> colors = new ArrayList<Double>();
-				for (int i = 0; i < 3; i++) {
-					if (colorArray[i]) {
-						colors.add((double) i);
-					}
-				}
+				if (((CircleImageView) findViewById(R.id.c1)).color!=-1)
+					colors.add((double)((CircleImageView) findViewById(R.id.c1)).color);
+				if (((CircleImageView) findViewById(R.id.c2)).color!=-1)
+					colors.add((double)((CircleImageView) findViewById(R.id.c2)).color);
+				if (((CircleImageView) findViewById(R.id.c3)).color!=-1)
+					colors.add((double)((CircleImageView) findViewById(R.id.c3)).color);
+				if (((CircleImageView) findViewById(R.id.c4)).color!=-1)
+					colors.add((double)((CircleImageView) findViewById(R.id.c4)).color);
+				
 				String tagsString = ((EditText) findViewById(R.id.dreamTagsText))
 						.getText().toString();
 				String[] tagsArray = tagsString.split(" ");
@@ -420,4 +461,138 @@ public class NewDreamActivity extends Activity {
 		
 		playAudio.setVisibility(View.VISIBLE);
 	}
+	
+	
+//	public void drawCircle(ImageView img) {
+//		Bitmap bmp = Bitmap.createBitmap(20, 20, Bitmap.Config.RGB_565);
+//		Canvas c = new Canvas(bmp);
+//		Paint paint = new Paint();
+//		paint.setColor(Color.BLACK);
+//		c.drawCircle(10, 10, 10, paint);
+//		img.setBackground(new BitmapDrawable(getResources(), bmp));
+//	}
+	
+	protected void showColorDialog(View v) {
+        // TODO Auto-generated method stub
+        final ColorDialog dialog = new ColorDialog(v, NewDreamActivity.this);
+        dialog.show();
+    }
+	
+	
+	public class ColorDialog extends Dialog {
+		public CircleImageView selectedCircle = null;
+		public CircleImageView parent;
+		
+		public ColorDialog(View v, Context context) {
+			super(context);
+			requestWindowFeature(Window.FEATURE_NO_TITLE);
+	        setContentView(R.layout.activity_color_picker);
+	        parent = (CircleImageView) v;
+	        
+//	        ImageView img = (ImageView)dialog.findViewById(R.id.circle);
+//	        drawCircle(img);
+	        ((CircleImageView) this.findViewById(R.id.circle00)).setColor(getResources().getColor(R.color.yellow));
+	        setClick(((CircleImageView) this.findViewById(R.id.circle00)));
+	        
+	        ((CircleImageView) this.findViewById(R.id.circle01)).setColor(getResources().getColor(R.color.fuchsia));
+	        setClick(((CircleImageView) this.findViewById(R.id.circle01)));
+	        
+	        ((CircleImageView) this.findViewById(R.id.circle02)).setColor(getResources().getColor(R.color.red));
+	        setClick(((CircleImageView) this.findViewById(R.id.circle02)));
+	        
+	        ((CircleImageView) this.findViewById(R.id.circle03)).setColor(getResources().getColor(R.color.silver));
+	        setClick(((CircleImageView) this.findViewById(R.id.circle03)));
+	        
+	        ((CircleImageView) this.findViewById(R.id.circle10)).setColor(getResources().getColor(R.color.gray));
+	        setClick(((CircleImageView) this.findViewById(R.id.circle10)));
+	        
+	        ((CircleImageView) this.findViewById(R.id.circle11)).setColor(getResources().getColor(R.color.olive));
+	        setClick(((CircleImageView) this.findViewById(R.id.circle11)));
+	        
+	        ((CircleImageView) this.findViewById(R.id.circle12)).setColor(getResources().getColor(R.color.purple));
+	        setClick(((CircleImageView) this.findViewById(R.id.circle12)));
+	        
+	        ((CircleImageView) this.findViewById(R.id.circle13)).setColor(getResources().getColor(R.color.maroon));
+	        setClick(((CircleImageView) this.findViewById(R.id.circle13)));
+	        
+	        ((CircleImageView) this.findViewById(R.id.circle20)).setColor(getResources().getColor(R.color.lime));
+	        setClick(((CircleImageView) this.findViewById(R.id.circle20)));
+	        
+	        ((CircleImageView) this.findViewById(R.id.circle21)).setColor(getResources().getColor(R.color.teal));
+	        setClick(((CircleImageView) this.findViewById(R.id.circle21)));
+	        
+	        ((CircleImageView) this.findViewById(R.id.circle22)).setColor(getResources().getColor(R.color.green));
+	        setClick(((CircleImageView) this.findViewById(R.id.circle22)));
+	        
+	        ((CircleImageView) this.findViewById(R.id.circle23)).setColor(getResources().getColor(R.color.aqua));
+	        setClick(((CircleImageView) this.findViewById(R.id.circle23)));
+	        
+	        ((CircleImageView) this.findViewById(R.id.circle30)).setColor(getResources().getColor(R.color.blue));
+	        setClick(((CircleImageView) this.findViewById(R.id.circle30)));
+	        
+	        ((CircleImageView) this.findViewById(R.id.circle31)).setColor(getResources().getColor(R.color.navy));
+	        setClick(((CircleImageView) this.findViewById(R.id.circle31)));
+	        
+	        ((CircleImageView) this.findViewById(R.id.circle32)).setColor(getResources().getColor(R.color.black));
+	        setClick(((CircleImageView) this.findViewById(R.id.circle32)));
+	        
+	        ((CircleImageView) this.findViewById(R.id.circle33)).setColor(getResources().getColor(R.color.orange));
+	        setClick(((CircleImageView) this.findViewById(R.id.circle33)));
+
+	        
+	        TextView button = (TextView)this.findViewById(R.id.letsgo);    
+	        button.setOnClickListener(new View.OnClickListener() {
+	            @Override
+	            public void onClick(View v) {
+	                // TODO Auto-generated method stub
+	            	if (selectedCircle!=null) {
+		            	int color = selectedCircle.color;
+		            	if (color!=-1)
+		            		parent.setColor(color);
+	            	}
+	            	dismiss();
+	            }
+	        });
+		}
+		
+		public ColorDialog(Context context) {
+			super(context);
+			// TODO Auto-generated constructor stub
+			
+		}
+		
+		public void setClick(CircleImageView c) {
+			c.setOnClickListener(new View.OnClickListener() {
+			    @Override
+			    public void onClick(View v) {
+			    	setOnClick(v);
+			    }
+			});
+		}
+		
+		public void setOnClick(View v) {
+			CircleImageView circle = (CircleImageView) v;
+	        // TODO Auto-generated method stub
+	    	if (selectedCircle == null) {
+	    		circle.toggleSelected();
+	    		selectedCircle = (CircleImageView)v;
+	    		Log.i("CircleImageView", "no circle selected");
+	    	}
+	    	else if (selectedCircle.equals(circle)) {
+	    		circle.toggleSelected();
+	    		selectedCircle = null;
+	    		Log.i("CircleImageView", "tapping selected circle");
+	    	} else if(!selectedCircle.equals(circle)) {
+	    		circle.toggleSelected();
+	    		selectedCircle.toggleSelected();
+	    		selectedCircle = circle;
+	    		Log.i("CircleImageView", "tapping a different circle");
+	    	}  
+		}
+		
+		
+	}
+
+	
+	
 }

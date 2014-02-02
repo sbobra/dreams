@@ -67,16 +67,18 @@ public class JournalFragment extends Fragment {
 	Sleep[] sleepList;
 
 	public void clearTable() {
-		getActivity().runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				if (rootView != null) {
-					TableLayout table = (TableLayout) rootView
-							.findViewById(R.id.tableLayout);
-					table.removeAllViews();
+		if (getActivity() != null) {
+			getActivity().runOnUiThread(new Runnable() {
+				@Override
+				public void run() {
+					if (rootView != null) {
+						TableLayout table = (TableLayout) rootView
+								.findViewById(R.id.tableLayout);
+						table.removeAllViews();
+					}
 				}
-			}
-		});
+			});
+		}
 	}
 
 	/**
@@ -91,15 +93,6 @@ public class JournalFragment extends Fragment {
 		Log.i("JournalFragment", "onCreate");
 		super.onCreate(savedInstanceState);
 		mPageNumber = getArguments().getInt(ARG_PAGE);
-		
-		TimerTask checkFilesTask = new TimerTask() {
-            public void run() {
-                Log.i("JournalFragment", "refreshing");
-                onRefresh();
-            }
-        };
-		checkFilesTimer = new Timer();
-        checkFilesTimer.schedule(checkFilesTask, 0, 10000);
 	}
 
 	@Override
@@ -174,6 +167,20 @@ public class JournalFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		onRefresh();
+		
+		TimerTask checkFilesTask = new TimerTask() {
+            public void run() {
+                onRefresh();
+            }
+        };
+		checkFilesTimer = new Timer();
+        checkFilesTimer.schedule(checkFilesTask, 0, 10000);
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		checkFilesTimer.cancel();
 	}
 
 	public void populate(final Sleep sleep) {
@@ -199,8 +206,8 @@ public class JournalFragment extends Fragment {
 							.setText(sleep.getDream().getName());
 				String colors = "";
 				for (int i = 0; i < sleep.getDream().getColors().size(); i++) {
-					colors += Constants.colors[sleep.getDream().getColors()
-							.get(i).intValue()]
+					colors += sleep.getDream().getColors()
+							.get(i).intValue()
 							+ ", ";
 				}
 				Log.i("JournalFragment", "Colors: " + colors);
