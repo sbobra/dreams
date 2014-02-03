@@ -106,7 +106,6 @@ public class JournalFragment extends Fragment {
 
 	@OnClick(R.id.refreshButton)
 	public void onRefresh() {
-		clearTable();
 		// request dream data
 
 		StackMobModel.query(
@@ -124,12 +123,16 @@ public class JournalFragment extends Fragment {
 					public void success(List<Sleep> arg0) {
 						Log.i("JournalFragmentController", arg0.size()
 								+ " dreams received!");
-						sleepList = new Sleep[arg0.size()];
-						for (int i = 0; i < sleepList.length; i++) {
-							sleepList[i] = arg0.get(i);
+						Sleep[] newSleepList = new Sleep[arg0.size()];
+						for (int i = 0; i < newSleepList.length; i++) {
+							newSleepList[i] = arg0.get(i);
 						}
-						Arrays.sort(sleepList);
-						updateTable();
+						Arrays.sort(newSleepList);
+						if (!newSleepList.equals(sleepList)) {
+							sleepList = newSleepList;
+							clearTable();
+							updateTable();
+						}
 
 					}
 				});
@@ -209,6 +212,10 @@ public class JournalFragment extends Fragment {
 					colors += sleep.getDream().getColors()
 							.get(i).intValue()
 							+ ", ";
+					if (i == 0) {
+						TriangleImageView triangle = (TriangleImageView) row.findViewById(R.id.triangle);
+						triangle.setColor(sleep.getDream().getColors().get(i).intValue());
+					}
 				}
 				Log.i("JournalFragment", "Colors: " + colors);
 				// ((TextView)
